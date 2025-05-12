@@ -1,0 +1,918 @@
+/* Settings Page Styles for T3 Chat */
+
+.settings-wrapper {
+    min-height: 100vh;
+    height: 100%;
+    width: 100%;
+    background-color: var(--color-bg-primary);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.header-left, .header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.back-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-text-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.back-button .icon {
+    width: 1.2rem;
+    height: 1.2rem;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+}
+
+.theme-toggle {
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-toggle .icon {
+    width: 1.2rem;
+    height: 1.2rem;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+}
+
+.sign-out {
+    background: none;
+    border: none;
+    color: var(--color-text-primary);
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.settings-main {
+    display: flex;
+    gap: 2rem;
+    padding: 2rem;
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    flex: 1;
+}
+
+.settings-sidebar {
+    flex: 0 0 300px;
+}
+
+.user-profile-large {
+    text-align: center;
+    padding: 2rem;
+    background: var(--color-bg-secondary);
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.avatar-large {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+    background: var(--color-primary-light);
+}
+
+.username {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+.user-email {
+    color: var(--color-text-secondary);
+    margin: 0.5rem 0;
+}
+
+.plan-badge {
+    display: inline-block;
+    background: var(--color-primary);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.settings-content {
+    flex: 1;
+    max-width: 1200px;
+    width: 100%;
+    min-width: 0; /* Prevent flex item from overflowing */
+    overflow-y: visible;
+}
+
+.settings-tabs {
+    margin-bottom: 2rem;
+}
+
+.tab-group {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: var(--color-bg-secondary);
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    width: 100%;
+}
+
+.tab-button {
+    padding: 0.75rem 1.25rem;
+    border: none;
+    background: none;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 0.75rem;
+    font-size: 0.9rem;
+    flex: 1;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.tab-button.active {
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+}
+
+.settings-panel {
+    display: none;
+    padding: 2rem;
+    background: var(--color-bg-secondary);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-sm);
+    width: 100%;
+}
+
+.settings-panel.active {
+    display: block;
+    width: 100%;
+    animation: fadeIn 0.3s;
+}
+
+.settings-panel h1 {
+    color: var(--color-text-primary);
+    font-size: 1.75rem;
+    margin: 0 0 2rem;
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 2.5rem;
+}
+
+.benefit-card {
+    background: var(--color-bg-tertiary);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.benefit-icon {
+    width: 2rem;
+    height: 2rem;
+    margin-bottom: 1rem;
+    color: var(--color-primary);
+}
+
+.benefit-icon .icon {
+    width: 100%;
+    height: 100%;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    fill: none;
+}
+
+.benefit-card h3 {
+    color: var(--color-text-primary);
+    font-size: 1.25rem;
+    margin: 0 0 0.5rem;
+}
+
+.benefit-card p {
+    color: var(--color-text-secondary);
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* Consolidated Customization Section Styles */
+.customization-section {
+    margin-bottom: 2rem; /* Standardized, adjust if needed */
+    padding: 1.5rem;
+    background: var(--color-bg-tertiary);
+    border-radius: var(--border-radius-lg); /* Standardized */
+    border: 1px solid var(--color-border);
+    width: 100%; /* From first definition */
+}
+
+.customization-section h2 {
+    font-size: 1.5rem; /* Standardized from multiple definitions */
+    font-weight: 600; /* From first definition */
+    margin-bottom: 1.5rem;
+    color: var(--color-text-primary);
+    padding-bottom: 0.5rem; /* From first definition */
+    border-bottom: 1px solid var(--color-border); /* From first definition */
+}
+
+.customization-section h3 {
+    font-size: 1.1rem; /* From second definition */
+    margin-bottom: 0.5rem; /* From second definition */
+    color: var(--color-text-primary);
+    font-weight: 500; /* Added for consistency, can be adjusted */
+}
+/* End Consolidated Customization Section Styles */
+
+/* Consolidated Form Group Styles */
+.form-group {
+    margin-bottom: 1.5rem; /* Standardized */
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem; /* Standardized */
+    color: var(--color-text-primary);
+    font-weight: var(--font-weight-medium); /* Standardized */
+    font-size: 0.95rem; /* Standardized */
+}
+
+.form-group .description {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    margin-top: 0.25rem; /* Standardized */
+    margin-bottom: 0.5rem; /* Added for spacing */
+}
+/* End Consolidated Form Group Styles */
+
+/* Consolidated Common Customization Form Elements */
+.customization-input {
+    width: 100%;
+    padding: 0.75rem 1rem; /* Standardized from the more specific version */
+    background: var(--color-input-bg); /* Default, overridden by html.dark specific below */
+    border: 1px solid var(--color-border); /* Default, overridden by html.dark specific below */
+    border-radius: var(--border-radius-md); /* Standardized */
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    transition: all var(--transition-fast); /* Standardized */
+}
+
+.customization-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px var(--color-primary-light); /* Standardized */
+}
+
+textarea.customization-input {
+    min-height: 120px; /* Standardized from the more specific version */
+    resize: vertical;
+}
+
+.font-select {
+    width: 100%;
+    padding: 0.75rem 1rem; /* Standardized */
+    background: var(--color-input-bg); /* Default, overridden by html.dark specific below */
+    border: 1px solid var(--color-border); /* Default, overridden by html.dark specific below */
+    border-radius: var(--border-radius-md); /* Standardized */
+    color: var(--color-text-primary);
+    font-size: 0.95rem;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); /* Standardized to larger arrow */
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center; /* Standardized */
+    padding-right: 2.5rem;
+}
+
+.font-select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px var(--color-primary-light); /* Standardized */
+}
+
+.fonts-preview {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: var(--color-bg-secondary); /* Standardized */
+    border-radius: var(--border-radius-lg); /* Standardized */
+    border: 1px solid var(--color-border); /* Standardized */
+}
+
+.fonts-preview h3 {
+    font-size: 1rem; /* Standardized */
+    font-weight: 500; /* Standardized */
+    margin-bottom: 1rem; /* Standardized */
+    color: var(--color-text-primary);
+}
+
+.preview-code {
+    font-family: var(--font-mono);
+    background: var(--color-code-bg); /* Default, overridden by html.dark specific below */
+    padding: 1rem;
+    border-radius: var(--border-radius-md); /* Standardized */
+    color: var(--color-code-text); /* Default, overridden by html.dark specific below */
+    font-size: 0.9rem;
+    line-height: 1.5; /* Standardized */
+    margin-top: 0.75rem; /* Standardized */
+    overflow-x: auto; /* Added from one of the definitions */
+}
+
+.save-preferences-btn { /* Renamed from .save-preferences and consolidated */
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius-md); /* Standardized */
+    font-weight: var(--font-weight-medium); /* Standardized */
+    cursor: pointer;
+    transition: all var(--transition-fast); /* Standardized */
+    margin-top: 1.5rem;
+}
+
+.save-preferences-btn:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-1px); /* Added from one of the definitions */
+}
+
+.save-preferences-btn:active {
+    transform: translateY(0); /* Added from one of the definitions */
+}
+
+/* Dark mode overrides for specific customization elements (integrated from @media query) */
+html.dark .customization-input,
+html.dark .font-select {
+    background: rgba(255, 255, 255, 0.05); /* Specific override */
+    border-color: var(--color-border); /* Ensure border matches dark theme variable if not transparent */
+}
+
+html.dark .customization-input:focus,
+html.dark .font-select:focus {
+    background: rgba(255, 255, 255, 0.08); /* Specific override */
+    border-color: var(--color-primary); /* Keep focus border color */
+}
+
+html.dark .preview-code {
+    background: rgba(255, 255, 255, 0.05); /* Specific override */
+    color: var(--color-text-primary); /* Ensure text is readable on this dark background */
+}
+/* End Consolidated Common Customization Form Elements */
+
+/* Usage Section Styles */
+.usage-section {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: var(--color-bg-secondary);
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.usage-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+.usage-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+.reset-time {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+}
+
+.usage-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+.usage-type {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.usage-label {
+    display: flex;
+    justify-content: space-between;
+    color: var(--color-text-primary);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.progress-bar {
+    height: 0.5rem;
+    background-color: var(--color-bg-tertiary);
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    background-color: var(--color-primary);
+    border-radius: 1rem;
+}
+
+.remaining {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+}
+
+.manage-subscription-btn {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    background: none;
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    color: var(--color-text-primary);
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 0.5rem;
+}
+
+.manage-subscription-btn:hover {
+    background-color: var(--color-bg-tertiary);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+/* API Key and Danger Zone Sections */
+.api-key-setting, .danger-zone {
+    margin-top: 2.5rem;
+    padding: 1.5rem;
+    background: var(--color-bg-tertiary);
+    border-radius: 1rem;
+}
+
+.danger-zone {
+    background-color: rgba(220, 38, 38, 0.1);
+}
+
+.api-key-setting h3, .danger-zone h3 {
+    color: var(--color-text-primary);
+    font-size: 1.2rem;
+    margin: 0 0 0.5rem;
+}
+
+.api-key-setting p, .danger-zone p {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+/* .form-group was here, its styles are now consolidated */
+.form-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    background-color: var(--color-input-bg);
+    color: var(--color-text-primary);
+    font-size: 0.9rem;
+}
+
+.save-preferences-btn {
+    padding: 0.75rem 1.25rem;
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.save-preferences-btn:hover {
+    background-color: var(--color-primary-dark);
+}
+
+.delete-account-btn {
+    padding: 0.75rem 1.25rem;
+    background-color: rgba(220, 38, 38, 0.8);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.delete-account-btn:hover {
+    background-color: rgb(220, 38, 38);
+}
+
+/* Save confirmation message */
+@keyframes fadeOutAndShrink {
+    0% { opacity: 1; transform: translateY(0); max-height: 60px; /* Adjust max-height as needed */ }
+    70% { opacity: 1; transform: translateY(0); max-height: 60px; }
+    95% { opacity: 0; transform: translateY(-10px); max-height: 0; }
+    100% { opacity: 0; transform: translateY(-10px); max-height: 0; visibility: hidden; }
+}
+
+.save-confirmation {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    background-color: var(--color-success-light);
+    color: var(--color-success);
+    border-radius: 0.5rem;
+    font-weight: 500;
+    display: none; /* Initially hidden */
+}
+
+.save-confirmation.visible {
+    display: block; /* Or flex, grid, etc., depending on desired layout */
+    animation: fadeOutAndShrink 3s forwards;
+}
+
+/* Responsive adjustments for settings page */
+@media (max-width: 768px) {
+    .settings-main {
+        flex-direction: column;
+        padding: 1rem;
+    }
+    
+    .settings-sidebar {
+        flex: 0 0 auto;
+        width: 100%;
+    }
+
+    .tab-group {
+        flex-wrap: wrap;
+    }
+
+    .tab-button {
+        flex: 1 0 auto;
+        min-width: 120px;
+    }
+}
+
+@media (min-width: 1600px) {
+    .settings-main {
+        max-width: 1800px;
+    }
+    
+    .settings-content {
+        max-width: 1400px;
+    }
+    
+    .benefits-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 2000px) {
+    .settings-main {
+        max-width: 2000px;
+    }
+    
+    .settings-content {
+        max-width: 1600px;
+    }
+}
+
+/* Checkbox Styles */
+/* Style for a standard square checkbox */
+.standard-checkbox-wrapper { /* Renamed for clarity */
+    display: flex;
+    align-items: flex-start; /* For square checkbox layout */
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    margin-bottom: 1rem; /* Added for spacing if needed */
+}
+
+.standard-checkbox-wrapper input[type="checkbox"] { /* Square checkbox style */
+    appearance: none;
+    -webkit-appearance: none;
+    width: 1.2rem;
+    height: 1.2rem;
+    border: 2px solid var(--color-border);
+    border-radius: 4px;
+    background: var(--color-input-bg);
+    cursor: pointer;
+    position: relative;
+    margin-top: 0.2rem; /* Align with text */
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+.standard-checkbox-wrapper input[type="checkbox"]:checked {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.standard-checkbox-wrapper input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    width: 6px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.standard-checkbox-wrapper .checkbox-label { /* Label for square checkbox */
+    flex: 1;
+}
+
+.standard-checkbox-wrapper .checkbox-label label { /* Assuming label is direct child */
+    font-weight: 500; /* Or as needed */
+    color: var(--color-text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.standard-checkbox-wrapper .checkbox-description { /* Description for square checkbox */
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    margin-top: 0.25rem; /* Or adjust as needed */
+}
+
+/* Styles for a toggle switch */
+.toggle-switch-wrapper { /* Renamed for clarity */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding: 0.5rem 0;
+}
+
+.toggle-switch-wrapper .checkbox-label { /* Label for toggle switch */
+    flex: 1;
+}
+
+.toggle-switch-wrapper .checkbox-label label {
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.toggle-switch-wrapper .checkbox-description { /* Description for toggle switch */
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Custom Toggle Switch input style (used within .toggle-switch-wrapper) */
+.toggle-switch-wrapper input[type="checkbox"].custom-toggle {
+    position: relative;
+    width: 3rem;
+    height: 1.5rem;
+    appearance: none;
+    -webkit-appearance: none;
+    background: var(--color-bg-tertiary);
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0; 
+}
+
+.toggle-switch-wrapper input[type="checkbox"].custom-toggle::before {
+    content: "";
+    position: absolute;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 50%;
+    background: white;
+    top: 0.15rem;
+    left: 0.15rem;
+    transition: all 0.3s ease;
+}
+
+.toggle-switch-wrapper input[type="checkbox"].custom-toggle:checked {
+    background: var(--color-primary);
+}
+
+.toggle-switch-wrapper input[type="checkbox"].custom-toggle:checked::before {
+    left: 1.65rem;
+}
+
+/* Models Panel Styles */
+.models-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.model-card {
+    background: var(--color-bg-secondary);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    border: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.model-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.model-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.75rem;
+    background: var(--color-primary-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-primary);
+}
+
+.model-icon.claude {
+    background: rgba(138, 43, 226, 0.2);
+    color: blueviolet;
+}
+
+.model-icon .icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+}
+
+.model-info {
+    flex: 1;
+}
+
+.model-info h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+    color: var(--color-text-primary);
+}
+
+.model-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 500;
+    padding: 0.2rem 0.5rem;
+    border-radius: 1rem;
+    text-transform: uppercase;
+}
+
+.model-badge.premium {
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+}
+
+.model-badge.standard {
+    background: rgba(59, 130, 246, 0.2);
+    color: #3b82f6;
+}
+
+.model-description {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1.25rem;
+    flex: 1;
+}
+
+.model-select-btn {
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    margin-top: auto;
+}
+
+.model-select-btn:not(.active) {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border);
+}
+
+.model-select-btn.active {
+    background: var(--color-primary);
+    color: white;
+    border: 1px solid var(--color-primary);
+}
+
+.model-select-btn:not(.active):hover {
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.section-description {
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+}
+
+.setting-description {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+/* Slider styles */
+.slider-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.range-slider {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 0.5rem;
+    border-radius: 1rem;
+    background: var(--color-bg-tertiary);
+    outline: none;
+}
+
+.range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 50%;
+    background: var(--color-primary);
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.range-slider::-moz-range-thumb {
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 50%;
+    background: var(--color-primary);
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.slider-value {
+    min-width: 2.5rem;
+    text-align: center;
+    font-weight: 500;
+    color: var(--color-text-primary);
+}
+
+.slider-labels {
+    display: flex;
+    justify-content: space-between;
+    color: var(--color-text-tertiary);
+    font-size: 0.8rem;
+    margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .models-grid {
+        grid-template-columns: 1fr;
+    }
+}

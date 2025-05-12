@@ -1,0 +1,92 @@
+/* Color Theme Options Styles */
+
+.color-theme-section {
+    margin-top: 2rem;
+}
+
+.color-theme-section h3 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    color: var(--color-text-primary);
+}
+
+.color-themes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+}
+
+.color-theme-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.color-theme-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.color-preview {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+
+.color-theme-option input[type="radio"]:checked + .color-preview {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px var(--color-primary-light);
+}
+
+.color-theme-option span:last-child {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+}
+
+/* Theme preview colors */
+.default-theme {
+    background: linear-gradient(135deg, #fdf6ff 0%, #ffffff 50%, #64748b 100%);
+}
+
+.midnight-theme {
+    background: linear-gradient(135deg, #151c28 0%, #1d2636 50%, #4a69bd 100%);
+}
+
+.ocean-theme {
+    background: linear-gradient(135deg, #10212f 0%, #1c3040 50%, #3498db 100%);
+}
+
+.forest-theme {
+    background: linear-gradient(135deg, #132618 0%, #1e3424 50%, #2ecc71 100%);
+}
+
+/* Modern Gray Theme */
+.modern-gray-theme {
+    background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 50%, #64748b 100%);
+}
+
+/* Dark mode adjustments */
+html.dark .color-theme-option span:last-child {
+    color: var(--color-text-secondary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .color-themes {
+        gap: 1rem;
+    }
+
+    .color-preview {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+}

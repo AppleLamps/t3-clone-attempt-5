@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Block Formatting Test</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/formatted-content.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .test-container {
+            margin: 2rem 0;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Code Block Formatting Test</h1>
+    
+    <div class="test-container">
+        <h2>JavaScript Example</h2>
+        <pre><code class="language-javascript">
+// This is a JavaScript example
+function helloWorld() {
+    console.log("Hello, World!");
+    return true;
+}
+
+// Call the function
+helloWorld();
+        </code></pre>
+    </div>
+
+    <div class="test-container">
+        <h2>HTML Example</h2>
+        <pre><code class="language-html">
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple HTML Page</title>
+</head>
+<body>
+    <h1>Hello, World!</h1>
+    <p>This is as basic as it gets.</p>
+</body>
+</html>
+        </code></pre>
+    </div>
+
+    <div class="test-container">
+        <h2>CSS Example</h2>
+        <pre><code class="language-css">
+/* CSS Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+}
+        </code></pre>
+    </div>
+
+    <script src="assets/js/utils/codeFormatter.js" type="module"></script>
+</body>
+</html>

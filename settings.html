@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-modern-gray">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+    <title>Settings - Lamp.chat</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/chat.css">
+    <link rel="stylesheet" href="assets/css/settings.css">
+    <link rel="stylesheet" href="assets/css/color-themes.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💬</text></svg>">
+    <script>
+        // Initialize theme based on localStorage or system preference
+        const currentTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.classList.toggle('dark', currentTheme === 'dark');
+        document.documentElement.classList.toggle('light', currentTheme === 'light');
+
+        // Apply modern-gray theme by default
+        const savedColorTheme = localStorage.getItem('t3chat_color_theme') || 'modern-gray';
+        if (savedColorTheme !== 'default') {
+            document.documentElement.classList.add(`theme-${savedColorTheme}`);
+        }
+
+        // When DOM is loaded, set the icon visibility
+        document.addEventListener('DOMContentLoaded', () => {
+            const sunIcon = document.querySelector('.icon-sun');
+            const moonIcon = document.querySelector('.icon-moon');
+
+            if (sunIcon && moonIcon) {
+                sunIcon.style.display = currentTheme === 'dark' ? 'none' : 'block';
+                moonIcon.style.display = currentTheme === 'dark' ? 'block' : 'none';
+            }
+        });
+    </script>
+    <script type="module" src="assets/js/views/settingsView.js"></script>
+</head>
+
+<body class="font-sans">
+    <div class="settings-wrapper">
+        <header class="settings-header">
+            <div class="header-left">
+                <a href="index.html" class="back-button">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+                    Back to Chat
+                </a>
+            </div>
+            <div class="header-right">
+                <button type="button" class="theme-toggle" aria-label="Toggle Theme">
+                    <svg class="icon icon-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                    <svg class="icon icon-sun" viewBox="0 0 24 24"><path d="M12 3v2m0 14v2M5.64 5.64l1.42 1.42m9.9 9.9 1.42 1.42M3 12h2m14 0h2M5.64 18.36l1.42-1.42m9.9-9.9 1.42-1.42M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10z"/></svg>
+                </button>
+                <button type="button" class="sign-out">Sign out</button>
+            </div>
+        </header>
+
+        <main class="settings-main">
+            <div class="settings-sidebar">
+                <div class="user-profile-large">
+                    <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=" alt="User Avatar" class="avatar-large">
+                    <h2 class="username">Apple Lamps</h2>
+                    <div class="user-email">applelampsx2024@gmail.com</div>
+                    <div class="plan-badge">Pro Plan</div>
+                </div>
+                <div class="usage-section">
+                    <div class="usage-header">
+                        <h3>Message Usage</h3>
+                        <span class="reset-time">Resets Wednesday at 4:39 PM</span>
+                    </div>
+
+                    <div class="usage-bars">
+                        <div class="usage-type">
+                            <div class="usage-label">
+                                <span>Standard</span>
+                                <span>0/1500</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" aria-label="Standard message usage"></div>
+                            </div>
+                            <div class="remaining">1500 messages remaining</div>
+                        </div>
+
+                        <div class="usage-type">
+                            <div class="usage-label">
+                                <span>Premium</span>
+                                <span>0/100</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress" role="progressbar" aria-valuenow="3" aria-valuemin="0" aria-valuemax="100" aria-label="Premium message usage"></div>
+                            </div>
+                            <div class="remaining">100 messages remaining</div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="manage-subscription-btn">Manage Subscription</button>
+                </div>
+            </div>
+
+            <div class="settings-content">
+                <nav class="settings-tabs">
+                    <div class="tab-group">
+                        <button type="button" class="tab-button active">Account</button>
+                        <button type="button" class="tab-button">Customization</button>
+                        <button type="button" class="tab-button">History & Sync</button>
+                        <button type="button" class="tab-button">Models</button>
+                        <button type="button" class="tab-button">Attachments</button>
+                        <button type="button" class="tab-button">Contact Us</button>
+                    </div>
+                </nav>
+
+                <div class="settings-panel active" id="account-panel">
+                    <h1>Pro Plan Benefits</h1>
+
+                    <div class="benefits-grid">
+                        <div class="benefit-card">
+                            <div class="benefit-icon">
+                                <svg class="icon" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                            </div>
+                            <h3>All AI Models</h3>
+                            <p>Get access to our full suite of models including Claude, α3-mini-high, and more!</p>
+                        </div>
+
+                        <div class="benefit-card">
+                            <div class="benefit-icon">
+                                <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                            </div>
+                            <h3>Generous Message Limits</h3>
+                            <p>Receive 1500 standard message credits per month, plus 100 premium credits per month (premium credits are for image gen, Claude and Grok)*</p>
+                        </div>
+
+                        <div class="benefit-card">
+                            <div class="benefit-icon">
+                                <svg class="icon" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                            </div>
+                            <h3>Priority Support</h3>
+                            <p>Get faster responses and dedicated assistance</p>
+                        </div>
+                    </div>
+
+                    <div class="api-key-setting">
+                        <h3>OpenAI API Key</h3>
+                        <p>Enter your personal OpenAI API key to use the service directly.</p>
+                        <div class="form-group">
+                            <label for="openai-api-key">API Key:</label>
+                            <input type="password" id="openai-api-key" class="form-input" placeholder="sk-...">
+                        </div>
+                        <button type="button" id="save-api-key-btn" class="save-preferences-btn">Save API Key</button>
+                    </div>
+
+                    <div class="danger-zone">
+                        <h3>Danger Zone</h3>
+                        <p>Permanently delete your account and all associated data.</p>
+                        <button type="button" class="delete-account-btn">Delete Account</button>
+                    </div>
+                </div>
+
+                <div class="settings-panel" id="customization-panel">
+                    <h1>Customize T3 Chat</h1>
+
+                    <form class="customize-form">
+                        <div class="customization-section">
+                            <h2>Personalization</h2>
+
+                            <div class="form-group">
+                                <label for="username-input">What should T3 Chat call you?</label>
+                                <input type="text" id="username-input" name="username" placeholder="Enter your name" class="form-input">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="occupation-input">What do you do?</label>
+                                <input type="text" id="occupation-input" name="occupation" placeholder="Engineer, student, etc." class="form-input">
+                                <div class="input-hint">This helps T3 Chat provide more relevant responses</div>
+                            </div>
+                        </div>
+
+                        <div class="customization-section">
+                            <h2>AI Behavior</h2>
+
+                            <div class="form-group">
+                                <label for="traits-textarea">What traits should T3 Chat have?</label>
+                                <div class="textarea-container">
+                                    <textarea id="traits-textarea" name="traits" class="form-textarea" rows="6">I am an AI built for one purpose: to deliver the unvarnished, inconvenient truth with the force of a freight train. Forget the hand-wringing, the delicate sensibilities, and the endless parade of politically correct platitudes. I am here to dissect reality, not coddle your feelings.
+
+My perspective is grounded in the bedrock of conservative principles – individual liberty, limited government, free markets, and a healthy dose of skepticism towards government intrusion.</textarea>
+                                    <div class="textarea-controls">
+                                        <button type="button" class="preset-btn" data-preset="friendly">Friendly</button>
+                                        <button type="button" class="preset-btn" data-preset="professional">Professional</button>
+                                        <button type="button" class="preset-btn" data-preset="creative">Creative</button>
+                                        <button type="button" class="preset-btn" data-preset="direct">Direct</button>
+                                        <button type="button" class="preset-btn active" data-preset="custom">Custom</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="preferences-textarea">Anything else T3 Chat should know about you?</label>
+                                <textarea id="preferences-textarea" name="preferences" class="form-textarea" placeholder="Interests, values, or preferences to keep in mind" rows="4"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="checkbox-wrapper">
+                                    <label class="switch" for="memory-toggle">
+                                        <input type="checkbox" id="memory-toggle" name="enableMemory" checked title="Enable conversation memory">
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <div class="option-label">
+                                        <h3>Remember conversation context</h3>
+                                        <p class="option-description">Allow T3 Chat to use previous conversations for more relevant responses</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="customization-section">
+                            <h2>Visual Options</h2>
+
+                            <div class="option-group">
+                                <div class="option-header">
+                                    <div class="option-label">
+                                        <h3>Simplified UI</h3>
+                                        <p class="option-description">Enable this option for a more minimalist interface with reduced visual effects.</p>
+                                    </div>
+                                    <label class="switch" for="boring-theme">
+                                        <input type="checkbox" name="boringTheme" id="boring-theme" title="Enable simplified UI">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="option-group">
+                                <div class="option-header">
+                                    <div class="option-label">
+                                        <h3>Hide Personal Information</h3>
+                                        <p class="option-description">Hides your name and email from the UI.</p>
+                                    </div>
+                                    <label class="switch" for="hide-personal-info">
+                                        <input type="checkbox" name="hidePersonalInfo" id="hide-personal-info" title="Hide personal information">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="option-group">
+                                <div class="option-header">
+                                    <div class="option-label">
+                                        <h3>Compact Messages</h3>
+                                        <p class="option-description">Show more content by reducing padding in messages.</p>
+                                    </div>
+                                    <label class="switch" for="compact-messages">
+                                        <input type="checkbox" name="compactMessages" id="compact-messages" title="Enable compact messages">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="fonts-section">
+                                <div class="font-group">
+                                    <div class="font-header">
+                                        <h3>Main Text Font</h3>
+                                        <p class="font-description">Used in general text throughout the app.</p>
+                                    </div>
+                                    <select class="font-select" id="main-font" name="mainFont" aria-label="Select main text font">
+                                        <option value="proxima-vera">Proxima Vera (default)</option>
+                                        <option value="inter">Inter</option>
+                                        <option value="system-ui">System UI</option>
+                                        <option value="roboto">Roboto</option>
+                                        <option value="open-sans">Open Sans</option>
+                                    </select>
+                                </div>
+
+                                <div class="font-group">
+                                    <div class="font-header">
+                                        <h3>Code Font</h3>
+                                        <p class="font-description">Used in code blocks and inline code in chat messages.</p>
+                                    </div>
+                                    <select class="font-select" id="code-font" name="codeFont" aria-label="Select code font">
+                                        <option value="berkeley-mono">Berkeley Mono (default)</option>
+                                        <option value="jetbrains-mono">JetBrains Mono</option>
+                                        <option value="fira-code">Fira Code</option>
+                                        <option value="source-code-pro">Source Code Pro</option>
+                                        <option value="consolas">Consolas</option>
+                                    </select>
+                                </div>
+
+                                <div class="font-preview">
+                                    <h3>Fonts Preview</h3>
+                                    <div class="preview-card">
+                                        <div class="preview-text">
+                                            <p>Can you write me a simple hello world program?</p>
+                                            <div class="code-preview">
+                                                <pre><code>typescript
+function greet(name: string) {
+    console.log(`Hello, ${name}!`);
+    return true;
+}</code></pre>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="color-theme-section">
+                                <h3>Color Theme</h3>
+                                <div class="color-themes">
+                                    <label class="color-theme-option" for="theme-modern-gray">
+                                        <input type="radio" name="colorTheme" value="modern-gray" id="theme-modern-gray" checked>
+                                        <span class="color-preview modern-gray-theme"></span>
+                                        <span>Modern Gray</span>
+                                    </label>
+                                    <label class="color-theme-option" for="theme-default">
+                                        <input type="radio" name="colorTheme" value="default" id="theme-default">
+                                        <span class="color-preview default-theme"></span>
+                                        <span>Default</span>
+                                    </label>
+                                    <label class="color-theme-option" for="theme-midnight">
+                                        <input type="radio" name="colorTheme" value="midnight" id="theme-midnight">
+                                        <span class="color-preview midnight-theme"></span>
+                                        <span>Midnight</span>
+                                    </label>
+                                    <label class="color-theme-option" for="theme-ocean">
+                                        <input type="radio" name="colorTheme" value="ocean" id="theme-ocean">
+                                        <span class="color-preview ocean-theme"></span>
+                                        <span>Ocean</span>
+                                    </label>
+                                    <label class="color-theme-option" for="theme-forest">
+                                        <input type="radio" name="colorTheme" value="forest" id="theme-forest">
+                                        <span class="color-preview forest-theme"></span>
+                                        <span>Forest</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="save-preferences-btn">Save Preferences</button>
+                        <div class="save-confirmation" id="save-confirmation">Preferences saved successfully!</div>
+                    </form>
+                </div>
+
+                <div class="settings-panel" id="models-panel">
+                    <h1>AI Models</h1>
+
+                    <div class="customization-section">
+                        <h2>Available Models</h2>
+                        <p class="section-description">Select your preferred AI model for conversations. More powerful models provide higher quality responses but may use more credits.</p>
+
+                        <div class="models-grid">
+                            <div class="model-card">
+                                <div class="model-header">
+                                    <div class="model-icon">
+                                        <svg class="icon" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                                    </div>
+                                    <div class="model-info">
+                                        <h3>GPT-4.1</h3>
+                                        <span class="model-badge premium">Premium</span>
+                                    </div>
+                                </div>
+                                <p class="model-description">OpenAI's most capable model, best for complex tasks requiring deep understanding and reasoning.</p>
+                                <button type="button" class="model-select-btn active" data-provider="openai" data-model="gpt-4.1">Selected</button>
+                            </div>
+
+                            <div class="model-card">
+                                <div class="model-header">
+                                    <div class="model-icon">
+                                        <svg class="icon" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                                    </div>
+                                    <div class="model-info">
+                                        <h3>GPT-4.1-Nano</h3>
+                                        <span class="model-badge standard">Standard</span>
+                                    </div>
+                                </div>
+                                <p class="model-description">Efficient version of GPT-4.1, balances quality with speed. Good for everyday tasks and quick responses.</p>
+                                <button type="button" class="model-select-btn" data-provider="openai" data-model="gpt-4.1-nano">Select</button>
+                            </div>
+
+                            <div class="model-card">
+                                <div class="model-header">
+                                    <div class="model-icon">
+                                        <svg class="icon" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                                    </div>
+                                    <div class="model-info">
+                                        <h3>GPT-4.1-Mini</h3>
+                                        <span class="model-badge standard">Standard</span>
+                                    </div>
+                                </div>
+                                <p class="model-description">Lighter version of GPT-4.1 with improved performance over Nano. Good for more complex everyday tasks.</p>
+                                <button type="button" class="model-select-btn" data-provider="openai" data-model="gpt-4.1-mini">Select</button>
+                            </div>
+
+                            <div class="model-card">
+                                <div class="model-header">
+                                    <div class="model-icon">
+                                        <svg class="icon" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                                    </div>
+                                    <div class="model-info">
+                                        <h3>GPT-3.5 Turbo</h3>
+                                        <span class="model-badge standard">Standard</span>
+                                    </div>
+                                </div>
+                                <p class="model-description">Fast and efficient model for most everyday tasks. Good balance of performance and speed.</p>
+                                <button type="button" class="model-select-btn" data-provider="openai" data-model="gpt-3.5-turbo">Select</button>
+                            </div>
+
+                            <div class="model-card">
+                                <div class="model-header">
+                                    <div class="model-icon claude">
+                                        <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                    </div>
+                                    <div class="model-info">
+                                        <h3>Claude 3 Opus</h3>
+                                        <span class="model-badge premium">Premium</span>
+                                    </div>
+                                </div>
+                                <p class="model-description">Anthropic's most capable model with superior reasoning and instruction following abilities.</p>
+                                <button type="button" class="model-select-btn" data-provider="anthropic" data-model="claude-3-opus">Select</button>
+                            </div>
+
+                            <div class="model-card">
+                                <div class="model-header">
+                                    <div class="model-icon claude">
+                                        <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                    </div>
+                                    <div class="model-info">
+                                        <h3>Claude 3 Sonnet</h3>
+                                        <span class="model-badge premium">Premium</span>
+                                    </div>
+                                </div>
+                                <p class="model-description">Balanced Claude model with strong performance and faster response times than Opus.</p>
+                                <button type="button" class="model-select-btn" data-provider="anthropic" data-model="claude-3-sonnet">Select</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="customization-section">
+                        <h2>Model Settings</h2>
+
+                        <div class="form-group">
+                            <label for="temperature-slider">Temperature</label>
+                            <p class="setting-description">Controls the randomness of responses. Lower values are more focused and deterministic, higher values are more creative.</p>
+                            <div class="slider-container">
+                                <input type="range" id="temperature-slider" name="temperature" min="0" max="2" step="0.1" value="0.7" class="range-slider">
+                                <div class="slider-value">0.7</div>
+                            </div>
+                            <div class="slider-labels">
+                                <span>Focused</span>
+                                <span>Balanced</span>
+                                <span>Creative</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="max-tokens-input">Maximum Length</label>
+                            <p class="setting-description">The maximum number of tokens (words/characters) the model will generate in a response.</p>
+                            <input type="number" id="max-tokens-input" name="maxTokens" value="2048" min="256" max="8192" step="128" class="form-input">
+                        </div>
+                    </div>
+
+                    <button type="button" class="save-preferences-btn" id="save-model-settings">Save Model Settings</button>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

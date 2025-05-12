@@ -1,0 +1,448 @@
+/* Formatted Content Styles for T3 Chat */
+
+/* Code blocks */
+pre {
+    position: relative;
+    background-color: var(--color-code-bg, #f6f8fa);
+    border-radius: var(--border-radius-md);
+    padding: 1rem;
+    margin: 1rem 0;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+    line-height: 1.5;
+    color: var(--color-code-text, #24292e);
+    border: 1px solid var(--color-border);
+}
+
+/* Code block with header label */
+pre.code-block {
+    padding-top: 2.5rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-radius: var(--border-radius-md);
+    margin: 1.5rem 0;
+    background-color: var(--color-code-block-bg, var(--color-code-block-bg-light));
+    border: 1px solid var(--color-code-block-border, var(--color-code-block-border-light));
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
+    overflow-x: auto;
+    position: relative;
+}
+
+/* Collapsed code block state */
+pre.code-block.collapsed {
+    height: var(--code-block-collapsed-height);
+    overflow: hidden;
+}
+
+/* Code block header */
+.code-block-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2rem;
+    padding: 0 0.5rem 0 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--color-code-header-text, var(--color-code-header-text-light));
+    background-color: var(--color-code-header-bg, var(--color-code-header-bg-light));
+    border-top-left-radius: var(--border-radius-md);
+    border-top-right-radius: var(--border-radius-md);
+    border-bottom: 1px solid var(--color-code-header-border, var(--color-code-header-border-light));
+}
+
+/* Language display in header */
+.code-block-header .code-lang {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-code-header-lang-text, var(--color-code-header-lang-text-light));
+    text-transform: lowercase;
+}
+
+/* Code block controls */
+.code-block-header .code-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.code-block-header .code-control-btn {
+    background: none;
+    border: none;
+    padding: 0.25rem;
+    cursor: pointer;
+    color: var(--color-code-header-text, var(--color-code-header-text-light)); /* Use header text color for consistency */
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.code-block-header .code-control-btn:hover {
+    opacity: 1;
+}
+
+.code-block-header .code-control-btn svg {
+    width: 0.875rem;
+    height: 0.875rem;
+}
+
+code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    padding: 0.2em 0.4em;
+    border-radius: var(--border-radius-xs);
+    background-color: var(--color-inline-code-bg, rgba(0, 0, 0, 0.05));
+    color: var(--color-inline-code-text, var(--color-text-primary));
+}
+
+pre code {
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+    color: var(--color-code-block-internal-text, var(--color-code-block-internal-text-light));
+    display: block;
+    width: 100%;
+    white-space: pre-wrap;       /* Since CSS 2.1 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+    tab-size: 2;                 /* For proper indentation */
+    -moz-tab-size: 2;
+    line-height: 1.5;
+}
+
+/* Improved syntax highlighting */
+/* HTML/XML Tag Styling */
+.language-html .token.tag,
+.language-xml .token.tag,
+.language-markup .token.tag {
+    color: var(--color-token-markup-tag, var(--color-token-markup-tag-light));
+}
+
+.language-html .token.attr-name,
+.language-xml .token.attr-name,
+.language-markup .token.attr-name {
+    color: var(--color-token-markup-attr-name, var(--color-token-markup-attr-name-light));
+}
+
+.language-html .token.attr-value,
+.language-xml .token.attr-value,
+.language-markup .token.attr-value {
+    color: var(--color-token-markup-attr-value, var(--color-token-markup-attr-value-light));
+}
+
+.language-html .token.punctuation,
+.language-xml .token.punctuation,
+.language-markup .token.punctuation {
+    color: var(--color-token-markup-punctuation, var(--color-token-markup-punctuation-light));
+}
+
+/* Common token styling */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+    color: var(--color-token-comment-prolog-doctype-cdata, var(--color-token-comment-prolog-doctype-cdata-light));
+}
+
+.token.punctuation {
+    color: var(--color-token-punctuation, var(--color-token-punctuation-light));
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol {
+    color: var(--color-token-property-tag-boolean-number-constant-symbol, var(--color-token-property-tag-boolean-number-constant-symbol-light));
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin {
+    color: var(--color-token-selector-attr-name-string-char-builtin, var(--color-token-selector-attr-name-string-char-builtin-light));
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+    color: var(--color-token-operator-entity-url-cssstring-stylevalue, var(--color-token-operator-entity-url-cssstring-stylevalue-light));
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+    color: var(--color-token-atrule-attr-value-keyword, var(--color-token-atrule-attr-value-keyword-light));
+}
+
+.token.function,
+.token.class-name {
+    color: var(--color-token-function-class-name, var(--color-token-function-class-name-light));
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+    color: var(--color-token-regex-important-variable, var(--color-token-regex-important-variable-light));
+}
+
+/* Dark mode syntax highlighting */
+html.dark pre.code-block {
+    background-color: var(--color-code-bg); /* Already uses variable */
+    border-color: var(--color-code-block-border-dark);
+}
+
+html.dark .code-block-header {
+    color: var(--color-code-header-text-dark);
+    background-color: var(--color-code-header-bg-dark);
+    border-bottom-color: var(--color-code-header-border-dark);
+}
+
+html.dark .code-block-header .code-lang {
+    color: var(--color-code-header-lang-text-dark);
+}
+
+html.dark .code-block-header .code-control-btn {
+    color: var(--color-code-header-text-dark);
+}
+
+html.dark pre code {
+    color: var(--color-code-block-internal-text-dark);
+}
+
+html.dark .token.comment,
+html.dark .token.prolog,
+html.dark .token.doctype,
+html.dark .token.cdata {
+    color: var(--color-token-comment-prolog-doctype-cdata-dark);
+}
+
+html.dark .token.punctuation {
+    color: var(--color-token-punctuation-dark);
+}
+
+html.dark .token.property,
+html.dark .token.tag,
+html.dark .token.boolean,
+html.dark .token.number,
+html.dark .token.constant,
+html.dark .token.symbol {
+    color: var(--color-token-property-tag-boolean-number-constant-symbol-dark);
+}
+
+html.dark .token.selector,
+html.dark .token.attr-name,
+html.dark .token.string,
+html.dark .token.char,
+html.dark .token.builtin {
+    color: var(--color-token-selector-attr-name-string-char-builtin-dark);
+}
+
+html.dark .token.operator,
+html.dark .token.entity,
+html.dark .token.url,
+html.dark .language-css .token.string,
+html.dark .style .token.string {
+    color: var(--color-token-operator-entity-url-cssstring-stylevalue-dark);
+}
+
+html.dark .token.atrule,
+html.dark .token.attr-value,
+html.dark .token.keyword {
+    color: var(--color-token-atrule-attr-value-keyword-dark);
+}
+
+html.dark .token.function,
+html.dark .token.class-name {
+    color: var(--color-token-function-class-name-dark);
+}
+
+html.dark .token.regex,
+html.dark .token.important,
+html.dark .token.variable {
+    color: var(--color-token-regex-important-variable-dark);
+}
+
+/* HTML/XML Specific Syntax Highlighting (Dark Theme) */
+/* These will use the general dark theme tokens by default. */
+/* If specific overrides are needed, they can be added here, e.g.: */
+/*
+html.dark .language-html .token.tag,
+html.dark .language-xml .token.tag,
+html.dark .language-markup .token.tag {
+    color: var(--color-token-markup-tag-dark, var(--color-token-property-tag-boolean-number-constant-symbol-dark));
+}
+*/
+
+/* Markdown content */
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+    margin-top: 1.5em;
+    margin-bottom: 0.75em;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    line-height: 1.3;
+}
+
+.markdown-content h1 {
+    font-size: 1.6em;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.3em;
+}
+
+.markdown-content h2 {
+    font-size: 1.4em;
+    padding-bottom: 0.2em;
+}
+
+.markdown-content h3 {
+    font-size: 1.2em;
+}
+
+.markdown-content h4 {
+    font-size: 1.1em;
+}
+
+.markdown-content p {
+    margin-bottom: 1em;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+    margin-bottom: 1em;
+    padding-left: 2em;
+}
+
+.markdown-content li {
+    margin-bottom: 0.5em;
+}
+
+.markdown-content blockquote {
+    border-left: 4px solid var(--color-primary-light);
+    padding-left: 1em;
+    margin-left: 0;
+    margin-right: 0;
+    color: var(--color-text-secondary);
+}
+
+.markdown-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--border-radius-md);
+}
+
+.markdown-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1em;
+}
+
+.markdown-content th,
+.markdown-content td {
+    padding: 0.5em;
+    border: 1px solid var(--color-border);
+    text-align: left;
+}
+
+.markdown-content th {
+    background-color: var(--color-bg-tertiary);
+    font-weight: 600;
+}
+
+/* Inline code in dark mode */
+html.dark code {
+    background-color: var(--color-inline-code-bg);
+    color: var(--color-inline-code-text);
+}
+
+/* Code blocks in dark mode */
+html.dark pre {
+    background-color: var(--color-code-bg);
+    color: var(--color-code-text);
+    border-color: #2d2d2d;
+}
+
+/* Blockquote styles for bot messages */
+.bot-message blockquote,
+.markdown-blockquote {
+    border-left: 4px solid var(--color-primary-light);
+    background-color: var(--color-bg-tertiary);
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+    border-radius: var(--border-radius-md);
+    color: var(--color-text-secondary);
+    font-style: italic;
+    position: relative;
+}
+
+/* Dark mode blockquote */
+html.dark .bot-message blockquote,
+html.dark .markdown-blockquote {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-left-color: var(--color-primary);
+}
+
+/* Link styles for bot messages */
+.bot-message a {
+    color: var(--color-primary);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--color-primary-light);
+    transition: all 0.2s ease;
+}
+
+.bot-message a:hover {
+    color: var(--color-primary-dark);
+    border-bottom: 1px solid var(--color-primary);
+}
+
+/* Dark mode link styles */
+html.dark .bot-message a {
+    color: #e091c8; /* Lighter color for better visibility in dark mode */
+    border-bottom-color: rgba(224, 145, 200, 0.4);
+}
+
+html.dark .bot-message a:hover {
+    color: #f0b0dd;
+    border-bottom-color: #e091c8;
+}
+
+/* --- Moved from main.css for modularity --- */
+
+.inline-code {
+    background: var(--color-inline-code-bg, #f3f3f6);
+    border-radius: var(--border-radius-xs);
+    padding: 0.2em 0.4em;
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    color: var(--color-inline-code-text, var(--color-primary-dark));
+    white-space: nowrap;
+}
+
+.bot-message pre.code-block {
+    margin: 1.2em 0 1.5em;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+}
+
+.bot-message .inline-code {
+    background-color: rgba(175, 184, 193, 0.2);
+    padding: 0.2em 0.4em;
+    font-size: 0.9em;
+    color: var(--text-primary);
+}

@@ -1,0 +1,924 @@
+/* main.css - Core styles for Lamp.chat */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+}
+
+:root {
+    /* Layout dimensions */
+    --sidebar-width: 280px;
+    --border-radius-xs: 0.25rem;
+    --border-radius-sm: 0.375rem;
+    --border-radius-md: 0.75rem;
+    --border-radius-lg: 1rem;
+    --border-radius-xl: 1.5rem;
+
+    /* Spacing */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+
+    /* Typography */
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-md: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --line-height-tight: 1.25;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.75;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-focus: 0 0 0 3px rgba(100, 116, 139, 0.25);
+
+    /* Common colors (theme-independent) */
+    --color-primary: #64748b; /* Slate Gray - replaced pink/fuchsia */
+    --color-primary-light: #f1f5f9; /* Light slate for backgrounds */
+    --color-primary-dark: #475569; /* Darker slate for hover states */
+    --color-error: #dc2626;
+    --color-error-light: #fff1f1;
+    --color-error-dark: #b91c1c;
+    --color-success: #10b981;
+    --color-success-light: #ecfdf5;
+    --color-success-dark: #059669;
+    --color-warning: #f59e0b;
+    --color-warning-light: #fffbeb;
+    --color-warning-dark: #d97706;
+    --color-white: #ffffff;
+    --color-black: #000000;
+    --color-gray-dark: #333333; /* For send button hover */
+    --color-send-btn-bg: var(--color-black);
+    --color-send-btn-text: var(--color-white);
+    --color-send-btn-hover-bg: var(--color-gray-dark);
+
+    /* Code Block Specific Styles (Light Theme) */
+    --color-code-block-bg-light: #f7f7f7;
+    --color-code-block-border-light: #e1e1e8;
+    --color-code-header-bg-light: #f5f5f5;
+    --color-code-header-border-light: #e1e1e8;
+    --color-code-header-text-light: #666;
+    --color-code-header-lang-text-light: #333;
+    --color-code-block-internal-text-light: #333;
+
+    /* Syntax Highlighting Tokens (Prism.js - Light Theme) */
+    --color-token-comment-prolog-doctype-cdata-light: #6a737d;
+    --color-token-punctuation-light: #5e6687;
+    --color-token-property-tag-boolean-number-constant-symbol-light: #8959a8;
+    --color-token-selector-attr-name-string-char-builtin-light: #3e999f;
+    --color-token-operator-entity-url-cssstring-stylevalue-light: #9a6e3a;
+    --color-token-atrule-attr-value-keyword-light: #2f9c0a;
+    --color-token-function-class-name-light: #DD4A68;
+    --color-token-regex-important-variable-light: #e90;
+
+    /* HTML/XML Specific Syntax Highlighting (Prism.js - Light Theme) */
+    --color-token-markup-tag-light: #8959a8;
+    --color-token-markup-attr-name-light: #3e999f;
+    --color-token-markup-attr-value-light: #2f9c0a;
+    --color-token-markup-punctuation-light: #7e7e7e;
+
+    /* Other Code Style Variables */
+    --code-block-collapsed-height: 2.5rem;
+
+    /* Light theme colors (default) - Modern Gray Theme */
+    --color-bg-primary: #f9fafb; /* Light gray background */
+    --color-bg-secondary: #ffffff;
+    --color-bg-sidebar: #f3f4f6; /* Light gray sidebar */
+    --color-bg-tertiary: #f3f4f6; /* Light gray tertiary */
+    --color-text-primary: #111827; /* Dark gray for primary text */
+    --color-text-secondary: #6b7280; /* Medium gray for secondary text */
+    --color-text-tertiary: #9ca3af; /* Lighter gray for tertiary text */
+    --color-border: #e5e7eb; /* Light gray border */
+    --color-input-bg: rgba(255, 255, 255, 0.5);
+    --color-button-primary-bg: var(--color-primary);
+    --color-button-primary-text: var(--color-white);
+    --color-button-secondary-bg: rgba(255, 255, 255, 0.8);
+    --color-button-secondary-text: #111827;
+    --color-bg-hover: rgba(255, 255, 255, 0.8);
+    --color-bg-active: var(--color-primary-light);
+    --color-actions-container-bg: #f3f4f6; /* Background for the top-right actions container */
+
+    /* Chat message colors */
+    --color-user-message-bg: #e5e7eb; /* Light gray for sent messages */
+    --color-user-message-text: #111827; /* Dark text for user messages */
+
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html {
+    box-sizing: border-box;
+    font-family: var(--font-sans);
+    color-scheme: light; /* Default to light theme */
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Dark theme overrides - Modern Gray Dark Theme */
+html.dark {
+    color-scheme: dark;
+    --color-bg-primary: #1f2937; /* Dark gray background */
+    --color-bg-secondary: #111827; /* Darker gray secondary */
+    --color-bg-sidebar: #1f2937; /* Dark gray sidebar */
+    --color-bg-tertiary: #374151; /* Medium dark gray tertiary */
+    --color-text-primary: #f9fafb; /* Very light gray for primary text */
+    --color-text-secondary: #e5e7eb; /* Light gray for secondary text */
+    --color-text-tertiary: #9ca3af; /* Medium gray for tertiary text */
+    --color-border: #4b5563; /* Medium gray border */
+    --color-input-bg: rgba(0, 0, 0, 0.2);
+    --color-button-secondary-bg: rgba(0, 0, 0, 0.3);
+    --color-button-secondary-text: #f9fafb;
+    --color-bg-hover: rgba(0, 0, 0, 0.2);
+    --color-bg-active: rgba(100, 116, 139, 0.15); /* Slate gray active state */
+    --color-actions-container-bg: #374151; /* Background for the top-right actions container in dark mode */
+
+    /* Dark mode specific colors for chat */
+    --color-primary-light: rgba(100, 116, 139, 0.25); /* Darker version for user messages */
+    --color-user-message-text: #f9fafb; /* Light text for user messages */
+    --color-user-message-bg: #4b5563; /* Medium gray for user messages */
+
+    /* Code block colors for dark mode */
+    --color-code-bg: #1a1a1a;
+    --color-code-text: #e6e6e6;
+    --color-inline-code-bg: rgba(255, 255, 255, 0.1);
+    --color-inline-code-text: #f5ecf9;
+
+    /* Code Block Specific Styles (Dark Theme) */
+    --color-code-block-border-dark: var(--color-border);
+    --color-code-header-bg-dark: var(--color-bg-tertiary); /* Already uses this variable in formatted-content.css */
+    --color-code-header-border-dark: #333;
+    --color-code-header-text-dark: var(--color-text-secondary);
+    --color-code-header-lang-text-dark: var(--color-text-primary);
+    --color-code-block-internal-text-dark: var(--color-code-text);
+
+    /* Syntax Highlighting Tokens (Prism.js - Dark Theme) */
+    --color-token-comment-prolog-doctype-cdata-dark: #8b949e;
+    --color-token-punctuation-dark: #c9d1d9;
+    --color-token-property-tag-boolean-number-constant-symbol-dark: #ff7b72;
+    --color-token-selector-attr-name-string-char-builtin-dark: #a5d6ff;
+    --color-token-operator-entity-url-cssstring-stylevalue-dark: #ffa657;
+    --color-token-atrule-attr-value-keyword-dark: #d2a8ff;
+    --color-token-function-class-name-dark: #f97583;
+    --color-token-regex-important-variable-dark: #ffa657;
+    /* HTML/XML specific tokens will use the general dark theme tokens by default */
+
+    /* Dark theme attachment backgrounds */
+    --color-dark-attachment-preview-bg: rgba(0, 0, 0, 0.2);
+    --color-dark-attachment-item-bg: rgba(0, 0, 0, 0.3);
+    --color-dark-attachment-item-error-bg: rgba(220, 38, 38, 0.2);
+
+    /* Adjust shadows for dark mode */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+}
+
+/* Midnight Theme */
+html.theme-midnight {
+    --color-primary: #4a69bd;
+    --color-primary-light: rgba(74, 105, 189, 0.25);
+    --color-primary-dark: #3a539b;
+
+    --color-bg-primary: #151c28;
+    --color-bg-secondary: #1d2636;
+    --color-bg-sidebar: #1a2230;
+    --color-bg-tertiary: #202a3c;
+
+    --color-text-primary: #e6e9f0;
+    --color-text-secondary: #b8bfcc;
+    --color-text-tertiary: #8a91a3;
+
+    --color-border: #2e3950;
+    --color-input-bg: rgba(0, 0, 0, 0.2);
+    --color-button-secondary-bg: rgba(0, 0, 0, 0.3);
+    --color-button-secondary-text: #e6e9f0;
+
+    --color-bg-hover: rgba(0, 0, 0, 0.2);
+    --color-bg-active: rgba(74, 105, 189, 0.15);
+    --color-actions-container-bg: #2e3444;
+
+    --color-user-message-text: #e6e9f0;
+    --color-user-message-bg: #2e3950;
+
+    --color-code-bg: #11151e;
+    --color-code-text: #d8dbe4;
+    --color-inline-code-bg: rgba(255, 255, 255, 0.1);
+    --color-inline-code-text: #e6e9f0;
+}
+
+/* Ocean Theme */
+html.theme-ocean {
+    --color-primary: #3498db;
+    --color-primary-light: rgba(52, 152, 219, 0.25);
+    --color-primary-dark: #2980b9;
+
+    --color-bg-primary: #10212f;
+    --color-bg-secondary: #1c3040;
+    --color-bg-sidebar: #152736;
+    --color-bg-tertiary: #203747;
+
+    --color-text-primary: #e0f0fa;
+    --color-text-secondary: #a6c5d9;
+    --color-text-tertiary: #7a9fb8;
+
+    --color-border: #234862;
+    --color-input-bg: rgba(0, 0, 0, 0.2);
+    --color-button-secondary-bg: rgba(0, 0, 0, 0.3);
+    --color-button-secondary-text: #e0f0fa;
+
+    --color-bg-hover: rgba(0, 0, 0, 0.2);
+    --color-bg-active: rgba(52, 152, 219, 0.15);
+    --color-actions-container-bg: #25364a;
+
+    --color-user-message-text: #e0f0fa;
+    --color-user-message-bg: #234862;
+
+    --color-code-bg: #0c1924;
+    --color-code-text: #d0e5f2;
+    --color-inline-code-bg: rgba(255, 255, 255, 0.1);
+    --color-inline-code-text: #e0f0fa;
+}
+
+/* Forest Theme */
+html.theme-forest {
+    --color-primary: #2ecc71;
+    --color-primary-light: rgba(46, 204, 113, 0.25);
+    --color-primary-dark: #27ae60;
+
+    --color-bg-primary: #132618;
+    --color-bg-secondary: #1e3424;
+    --color-bg-sidebar: #1a2d1f;
+    --color-bg-tertiary: #24392a;
+
+    --color-text-primary: #e5f5ec;
+    --color-text-secondary: #b3d9bf;
+    --color-text-tertiary: #8abb98;
+
+    --color-border: #2a5334;
+    --color-input-bg: rgba(0, 0, 0, 0.2);
+    --color-button-secondary-bg: rgba(0, 0, 0, 0.3);
+    --color-button-secondary-text: #e5f5ec;
+
+    --color-bg-hover: rgba(0, 0, 0, 0.2);
+    --color-bg-active: rgba(46, 204, 113, 0.15);
+    --color-actions-container-bg: #2b3f2f;
+
+    --color-user-message-text: #e5f5ec;
+    --color-user-message-bg: #2a5334;
+
+    --color-code-bg: #0e1c10;
+    --color-code-text: #d3eed9;
+    --color-inline-code-bg: rgba(255, 255, 255, 0.1);
+    --color-inline-code-text: #e5f5ec;
+}
+
+/* Modern Gray Theme */
+html.theme-modern-gray {
+    /* Primary colors */
+    --color-primary: #64748b; /* Slate Gray */
+    --color-primary-light: rgba(100, 116, 139, 0.15);
+    --color-primary-dark: #475569;
+
+    /* Light theme colors */
+    --color-bg-primary: #f9fafb; /* Light gray background */
+    --color-bg-secondary: #ffffff;
+    --color-bg-sidebar: #f3f4f6; /* Light gray sidebar */
+    --color-bg-tertiary: #f3f4f6; /* Light gray tertiary */
+    --color-text-primary: #111827; /* Dark gray for primary text */
+    --color-text-secondary: #6b7280; /* Medium gray for secondary text */
+    --color-text-tertiary: #9ca3af; /* Lighter gray for tertiary text */
+    --color-border: #e5e7eb; /* Light gray border */
+    --color-input-bg: rgba(255, 255, 255, 0.5);
+    --color-button-secondary-bg: rgba(255, 255, 255, 0.8);
+    --color-button-secondary-text: #111827;
+    --color-bg-hover: rgba(255, 255, 255, 0.8);
+    --color-bg-active: var(--color-primary-light);
+    --color-actions-container-bg: #f3f4f6;
+
+    /* Chat message colors */
+    --color-user-message-bg: #e5e7eb; /* Light gray for sent messages */
+    --color-user-message-text: #111827; /* Dark text for user messages */
+
+    /* Code block colors */
+    --color-code-bg: #f8fafc;
+    --color-code-text: #334155;
+    --color-inline-code-bg: rgba(100, 116, 139, 0.1);
+    --color-inline-code-text: #475569;
+}
+
+/* Modern Gray Theme - Dark Mode */
+html.dark.theme-modern-gray {
+    /* Primary colors remain the same */
+    --color-primary: #64748b; /* Slate Gray */
+    --color-primary-light: rgba(100, 116, 139, 0.25);
+    --color-primary-dark: #475569;
+
+    /* Dark theme colors */
+    --color-bg-primary: #1f2937; /* Dark gray background */
+    --color-bg-secondary: #111827; /* Darker gray secondary */
+    --color-bg-sidebar: #1f2937; /* Dark gray sidebar */
+    --color-bg-tertiary: #374151; /* Medium dark gray tertiary */
+    --color-text-primary: #f9fafb; /* Very light gray for primary text */
+    --color-text-secondary: #e5e7eb; /* Light gray for secondary text */
+    --color-text-tertiary: #9ca3af; /* Medium gray for tertiary text */
+    --color-border: #4b5563; /* Medium gray border */
+    --color-input-bg: rgba(0, 0, 0, 0.2);
+    --color-button-secondary-bg: rgba(0, 0, 0, 0.3);
+    --color-button-secondary-text: #f9fafb;
+    --color-bg-hover: rgba(0, 0, 0, 0.2);
+    --color-bg-active: rgba(100, 116, 139, 0.15);
+    --color-actions-container-bg: #374151;
+
+    /* Chat message colors */
+    --color-user-message-text: #f9fafb; /* Light text for user messages */
+    --color-user-message-bg: #4b5563; /* Medium gray for user messages */
+
+    /* Code block colors */
+    --color-code-bg: #111827;
+    --color-code-text: #e5e7eb;
+    --color-inline-code-bg: rgba(255, 255, 255, 0.1);
+    --color-inline-code-text: #f9fafb;
+}
+
+/* Compact Messages Mode */
+html.compact-messages .bot-message,
+html.compact-messages .user-message {
+    padding: 0.65rem;
+    gap: 0.5rem;
+}
+
+html.compact-messages .bot-message p,
+html.compact-messages .user-message p {
+    margin-bottom: 0.5em;
+}
+
+html.compact-messages .chat-log {
+    gap: 0.75rem;
+}
+
+html.compact-messages pre.code-block {
+    margin: 0.5rem 0;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    letter-spacing: 0.015em;
+    line-height: var(--line-height-normal);
+    overflow: hidden;
+    min-height: 100svh;
+    display: flex;
+    font-weight: var(--font-weight-normal);
+}
+
+.app-wrapper {
+    display: flex;
+    width: 100%;
+    height: 100svh;
+    position: relative;
+}
+
+/* Sidebar styles moved to sidebar.css */
+
+/* Main Content Wrapper */
+.main-content-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-bg-secondary);
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.03);
+}
+
+/* Top Controls (Header) */
+.top-controls {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: calc(env(safe-area-inset-top) + 0.5rem) 1.25rem 0.5rem;
+    z-index: 10;
+    pointer-events: none; /* Allow clicks to pass through to elements below if needed */
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+}
+
+.top-left-controls, .top-right-controls {
+    display: flex;
+    gap: 0.75rem;
+    pointer-events: auto; /* Enable clicks on buttons */
+    align-items: center;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    padding: var(--space-xs, 0.5rem); /* Using CSS variable */
+    border-radius: var(--border-radius-md); /* Standardized border-radius */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    position: relative;
+    overflow: hidden; /* Useful for potential future pseudo-element effects if desired */
+}
+
+.icon-btn .icon {
+    width: 1.25rem; /* Standardized icon size */
+    height: 1.25rem;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    position: relative; /* Ensure icon is above potential background effects */
+    z-index: 1;
+}
+
+.icon-btn:hover {
+    color: var(--color-primary);
+    /* Applying background color on hover as per analysis suggestion for broader consistency */
+    background-color: var(--color-bg-hover, rgba(0,0,0,0.05)); /* Fallback for light theme */
+}
+
+/* Specific hover background for dark mode if --color-bg-hover is not sufficient */
+html.dark .icon-btn:hover {
+    background-color: var(--color-bg-hover, rgba(255,255,255,0.1)); /* Fallback for dark theme */
+}
+
+/* Optional: Active state if desired, can be added or refined */
+.icon-btn:active {
+    transform: translateY(1px); /* Simple active state feedback */
+}
+
+/* Chat Area */
+.chat-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 4rem 1.5rem 1.5rem; /* Increased top padding to account for controls */
+    padding-bottom: calc(1.5rem + 120px); /* Extra padding at bottom to ensure content isn't hidden behind input */
+    position: relative;
+    height: calc(100vh - 60px); /* Adjusted height calculation */
+    max-height: calc(100% - 60px); /* Ensure it doesn't overflow its container */
+    scroll-behavior: smooth;
+}
+
+.chat-area::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-area::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.chat-area::-webkit-scrollbar-thumb {
+    background-color: var(--color-border);
+    border-radius: var(--border-radius-md);
+}
+
+.chat-area::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-text-tertiary);
+}
+
+.initial-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem 1.5rem; /* Reduced padding */
+    height: 100%;
+    max-width: 800px; /* Slightly reduced max-width */
+    margin: 0 auto;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(var(--space-sm)); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.initial-screen h2 {
+    text-align: left;
+    font-size: 1.8rem; /* Reduced from 2.5rem */
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: 1.5rem; /* Reduced margin */
+    color: var(--color-text-primary);
+    max-width: 600px; /* Reduced max-width */
+    width: 100%;
+    line-height: var(--line-height-tight);
+    letter-spacing: -0.02em;
+}
+
+.category-buttons {
+    display: flex;
+    justify-content: flex-start;
+    gap: 0.75rem; /* Reduced gap */
+    margin-bottom: 2rem; /* Reduced margin */
+    flex-wrap: wrap;
+    max-width: 600px; /* Reduced max-width */
+    width: 100%;
+}
+
+.category-btn {
+    background-color: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border);
+    padding: 0.5rem 0.75rem; /* Reduced padding */
+    border-radius: var(--border-radius-lg);
+    font-size: 0.9rem; /* Reduced font size */
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* Reduced gap */
+    transition: all var(--transition-normal);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+}
+
+.category-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, var(--color-primary-light), transparent);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+    z-index: 0;
+}
+
+.category-btn .icon {
+    width: 1.1rem; /* Reduced from 1.4rem */
+    height: 1.1rem; /* Reduced from 1.4rem */
+    stroke: var(--color-primary);
+    stroke-width: 2;
+    fill: none;
+    position: relative;
+    z-index: 1;
+}
+
+.category-btn span {
+    position: relative;
+    z-index: 1;
+}
+
+.category-btn:hover {
+    border-color: var(--color-primary-light);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.category-btn:hover::before {
+    opacity: 0.15;
+}
+
+.prompt-suggestions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem; /* Reduced gap */
+    align-items: flex-start;
+    max-width: 600px; /* Reduced max-width */
+    width: 100%;
+    margin-top: 0.75rem; /* Reduced margin */
+}
+
+.prompt-btn {
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    padding: 0.4rem 0.6rem; /* Reduced padding */
+    font-size: 0.9rem; /* Reduced font size */
+    cursor: pointer;
+    text-align: left;
+    transition: all var(--transition-normal);
+    width: 100%;
+    max-width: 500px;
+    border-radius: var(--border-radius-sm);
+    position: relative;
+    overflow: hidden;
+}
+
+.prompt-btn::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 3px;
+    background-color: var(--color-primary);
+    transform: scaleY(0);
+    transition: transform var(--transition-normal);
+}
+
+.prompt-btn:hover {
+    color: var(--color-primary);
+    background-color: var(--color-bg-tertiary);
+    padding-left: 1rem;
+}
+
+.prompt-btn:hover::before {
+    transform: scaleY(1);
+}
+
+/* Chat Log */
+.chat-log {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 700px;
+    margin: 0 auto;
+    padding-bottom: 1rem; /* Add some space after the last message */
+}
+
+/* Chat Input Container */
+.chat-input-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.5rem;
+    background: linear-gradient(to top, var(--color-bg-secondary) 80%, transparent); /* Fade effect */
+    z-index: 5;
+}
+
+.chat-form {
+    background-color: var(--color-button-secondary-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-xl);
+    padding: 0.85rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 800px;
+    margin: 0 auto;
+    box-shadow: var(--shadow-md);
+    transition: box-shadow var(--transition-normal), transform var(--transition-normal);
+}
+
+/* Ensure chat form has proper contrast in dark mode */
+html.dark .chat-form {
+    background-color: var(--color-bg-secondary);
+    border-color: var(--color-border);
+}
+
+.chat-form:focus-within {
+    box-shadow: var(--shadow-lg), 0 0 0 2px var(--color-primary-light);
+    transform: translateY(-2px);
+}
+
+#chat-input {
+    background: none;
+    border: none;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-md);
+    font-family: var(--font-sans);
+    resize: none;
+    outline: none;
+    width: 100%;
+    min-height: 24px; /* For single line */
+    max-height: 150px; /* Limit growth */
+    line-height: var(--line-height-normal);
+    padding: 0.25rem 0;
+}
+
+#chat-input::placeholder {
+    color: var(--color-text-tertiary);
+    opacity: 0.7;
+}
+
+.chat-form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.25rem;
+}
+
+.actions-left, .actions-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.model-selector-btn, .search-toggle-btn {
+    background: none;
+    border: 1px solid transparent;
+    color: var(--color-text-secondary);
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--border-radius-lg);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all var(--transition-fast);
+}
+
+.model-selector-btn .icon, .search-toggle-btn .icon {
+    width: 1rem;
+    height: 1rem;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+}
+
+.model-selector-btn:hover, .search-toggle-btn:hover {
+    background-color: var(--color-bg-tertiary);
+    color: var(--color-primary);
+    border-color: var(--color-border);
+}
+
+.attach-btn {
+    padding: 0.5rem; /* This will now inherit the base .icon-btn style */
+}
+
+/* Settings page styles moved to settings.css */
+
+/*
+ * Light Theme Alternative
+ * This provides an alternative light theme with different colors
+ * than the default light theme defined in :root
+ */
+html.light-alt {
+    color-scheme: light;
+    --color-bg-primary: #f8fafc;
+    --color-bg-secondary: #ffffff;
+    --color-bg-sidebar: #f1f5f9;
+    --color-bg-tertiary: #f1f5f9;
+    --color-text-primary: #0f172a;
+    --color-text-secondary: #475569;
+    --color-text-tertiary: #64748b;
+    --color-border: #e2e8f0;
+    --color-input-bg: #f8fafc;
+    --color-button-primary-bg: #64748b;
+    --color-button-primary-text: #ffffff;
+    --color-button-secondary-bg: rgba(255, 255, 255, 0.8);
+    --color-button-secondary-text: #0f172a;
+    --color-bg-hover: rgba(255, 255, 255, 0.8);
+    --color-bg-active: rgba(100, 116, 139, 0.1);
+
+    /* Adjust shadows for light-alt theme */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.03);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+}
+
+/* Utility classes */
+.hidden {
+    display: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    /* Mobile sidebar behavior moved to sidebar.css */
+
+    /* Ensure main content takes full width */
+    .main-content-wrapper {
+        width: 100%;
+    }
+
+    /* Mobile header with blur effect */
+    .top-controls {
+        background-color: rgba(100, 116, 139, 0.8); /* Slate gray for mobile header */
+        -webkit-backdrop-filter: blur(8px);
+        backdrop-filter: blur(8px);
+        padding: calc(env(safe-area-inset-top) + 0.75rem) 1rem 0.75rem;
+    }
+
+    html.dark .top-controls {
+        background-color: rgba(30, 41, 59, 0.8); /* Darker slate for mobile header in dark mode */
+    }
+
+    /* Adjust chat area for mobile */
+    .chat-area {
+        padding: 1rem 0.75rem;
+        padding-bottom: calc(0.75rem + 100px); /* Extra padding at bottom for mobile */
+    }
+
+    /* Adjust initial screen for mobile */
+    .initial-screen {
+        padding: 2rem 1rem;
+    }
+
+    .initial-screen h2 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .category-buttons {
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Adjust input container for mobile */
+    .chat-input-container {
+        padding: 0.75rem 0.75rem calc(env(safe-area-inset-bottom) + 0.75rem);
+    }
+
+    /* Smaller padding for chat form on mobile */
+    .chat-form {
+        padding: 0.75rem;
+    }
+
+    /* Adjust chat messages for mobile */
+    .chat-message {
+        max-width: 90%;
+        padding: 0.85rem 1rem;
+    }
+}
+
+/* Scrollbar Compatibility */
+.custom-scrollbar {
+    /* Standard property - will be used by browsers that support it */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+
+    /* Ensure scrolling works properly */
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* WebKit browsers (Chrome, Safari, newer Edge) */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: var(--color-border);
+    border-radius: var(--border-radius-md);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-text-tertiary);
+}
+
+/* Fallback for icon-sun display property (moved from inline style) */
+.icon.icon-sun {
+    display: none;
+}
+
+/* Hidden class */
+.hidden {
+    display: none !important;
+}
+
+/* Top Right Actions Container */
+.top-right-actions-container {
+    display: flex; /* Always visible */
+    align-items: center;
+    padding: 6px var(--space-sm); /* Simplified padding */
+    gap: var(--space-xs); /* e.g. 4px or 6px */
+    position: relative;
+    transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+/* Removed redundant selector as the container is now always visible */
+
+/* Removed the scoop effect pseudo-element */
+
+/* Ensure icon buttons inside the new container are styled correctly */
+.top-right-actions-container .icon-btn {
+    /* Override any specific icon-btn styles if they conflict, e.g., from .top-controls */
+    color: var(--color-text-secondary); /* Ensure consistent color */
+}
+
+.top-right-actions-container .icon-btn:hover {
+    color: var(--color-primary); /* Ensure consistent hover color */
+}
