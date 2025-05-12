@@ -1045,6 +1045,11 @@ html.dark .chat-form {
     .chat-area {
         padding: 1rem 0.75rem;
         padding-bottom: calc(0.75rem + 100px);
+        /* Ensure chat area is always visible below the header */
+        padding-top: calc(3.5rem + env(safe-area-inset-top)); /* Increase top padding for header height */
+        height: calc(100vh - 3.5rem - env(safe-area-inset-top) - 100px); /* 3.5rem header + input area */
+        max-height: calc(100vh - 3.5rem - env(safe-area-inset-top) - 100px);
+        box-sizing: border-box;
     }
     .initial-screen {
         padding: 2rem 1rem;
