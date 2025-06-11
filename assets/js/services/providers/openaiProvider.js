@@ -50,11 +50,19 @@ class OpenAIProvider {
                 category: 'premium',
                 isReasoningModel: true,
                 disabled: true
+            },
+            {
+                id: 'o3',
+                name: 'o3',
+                description: 'Advanced reasoning model with high-effort problem-solving capabilities',
+                maxTokens: 200000,
+                category: 'premium',
+                isReasoningModel: true
             }
         ];
 
         // Define reasoning models
-        this.reasoningModels = ['o4-mini'];
+        this.reasoningModels = ['o4-mini', 'o3'];
     }
 
     /**
@@ -156,8 +164,48 @@ class OpenAIProvider {
             let requestBody;
 
             if (isReasoningModel) {
-                const formattedInput = [{ role: "user", content: message }];
-                requestBody = { model: modelId, reasoning: { effort: "medium" }, input: formattedInput };
+                // Format input based on specific reasoning model
+                if (modelId === 'o3') {
+                    // For o3, use the new API structure with conversation history
+                    const formattedInput = [];
+                    
+                    // Add previous conversation messages
+                    if (conversation && conversation.length > 0) {
+                        for (const msg of conversation) {
+                            const content = typeof msg.content === 'object' && msg.content.text 
+                                ? msg.content.text 
+                                : msg.content;
+                            formattedInput.push({ 
+                                role: msg.role === 'user' ? 'user' : 'assistant', 
+                                content 
+                            });
+                        }
+                    }
+                    
+                    // Add current user message
+                    const finalUserMessage = typeof message === 'object' && message.text ? message.text : message;
+                    formattedInput.push({ role: "user", content: finalUserMessage });
+                    
+                    requestBody = { 
+                        model: modelId, 
+                        input: formattedInput,
+                        text: {
+                            "format": {
+                                "type": "text"
+                            }
+                        },
+                        reasoning: { 
+                            effort: "high", 
+                            summary: "auto" 
+                        },
+                        tools: [],
+                        store: true
+                    };
+                } else {
+                    // For other reasoning models like o4-mini
+                    const formattedInput = [{ role: "user", content: message }];
+                    requestBody = { model: modelId, reasoning: { effort: "medium" }, input: formattedInput };
+                }
             } else if (hasAttachments) {
                 // Use vision model for handling attachments
                 const visionModel = 'gpt-4o';
@@ -292,7 +340,16 @@ class OpenAIProvider {
 
             if (isReasoningModel) {
                 const responseData = await response.json();
-                const outputText = responseData.output_text || '';
+                let outputText;
+                
+                if (modelId === 'o3') {
+                    // For o3 model, extract text from the response structure
+                    outputText = responseData.text?.value || responseData.output_text || '';
+                } else {
+                    // For other reasoning models
+                    outputText = responseData.output_text || '';
+                }
+                
                 const formattedOutput = this._formatApiResponse(outputText);
 
                 if (onStreamUpdate) {
