@@ -8,32 +8,40 @@ class OpenAIProvider {
         this.name = 'openai';
         this.models = [
             {
+                id: 'gpt-4.1',
+                name: 'GPT-4.1',
+                description: 'Advanced AI assistant with extensive reasoning and knowledge',
+                maxTokens: 1000000,
+                category: 'premium'
+            },
+            {
+                id: 'gpt-4.1-mini',
+                name: 'GPT-4.1 Mini',
+                description: 'Lighter version of GPT-4.1 with improved performance over Nano for complex tasks',
+                maxTokens: 32000,
+                category: 'standard'
+            },
+            {
                 id: 'gpt-4o',
                 name: 'GPT-4o',
-                description: 'Advanced multimodal AI with vision capabilities and strong reasoning',
+                description: 'Optimized version of GPT-4 with improved performance',
                 maxTokens: 128000,
                 category: 'premium'
             },
             {
-                id: 'gpt-4o-mini',
-                name: 'GPT-4o Mini',
-                description: 'Efficient version of GPT-4o with good performance and lower cost',
-                maxTokens: 128000,
-                category: 'standard'
+                id: 'o4-mini',
+                name: 'o4-Mini',
+                description: 'Reasoning model with advanced problem-solving capabilities',
+                maxTokens: 32000,
+                category: 'premium',
+                isReasoningModel: true
             },
             {
-                id: 'gpt-4-turbo',
-                name: 'GPT-4 Turbo',
-                description: 'Latest GPT-4 model with improved performance and knowledge cutoff',
-                maxTokens: 128000,
+                id: 'gpt-4.5-preview',
+                name: 'GPT-4.5 Preview',
+                description: 'Next-generation GPT model with enhanced capabilities and improved reasoning',
+                maxTokens: 200000,
                 category: 'premium'
-            },
-            {
-                id: 'gpt-3.5-turbo',
-                name: 'GPT-3.5 Turbo',
-                description: 'Fast and cost-effective model for most conversation tasks',
-                maxTokens: 16385,
-                category: 'standard'
             }
         ];
 
