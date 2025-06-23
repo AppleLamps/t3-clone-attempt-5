@@ -346,90 +346,16 @@ function greet(name: string) {
                         <h2>Available Models</h2>
                         <p class="section-description">Select your preferred AI model for conversations. More powerful models provide higher quality responses but may use more credits.</p>
 
-                        <div class="models-grid">
-                            <div class="model-card">
-                                <div class="model-header">
-                                    <div class="model-icon">
-                                        <svg class="icon" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                                    </div>
-                                    <div class="model-info">
-                                        <h3>GPT-4.1</h3>
-                                        <span class="model-badge premium">Premium</span>
-                                    </div>
-                                </div>
-                                <p class="model-description">OpenAI's most capable model, best for complex tasks requiring deep understanding and reasoning.</p>
-                                <button type="button" class="model-select-btn active" data-provider="openai" data-model="gpt-4.1">Selected</button>
-                            </div>
-
-                            <div class="model-card">
-                                <div class="model-header">
-                                    <div class="model-icon">
-                                        <svg class="icon" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                                    </div>
-                                    <div class="model-info">
-                                        <h3>GPT-4.1-Nano</h3>
-                                        <span class="model-badge standard">Standard</span>
-                                    </div>
-                                </div>
-                                <p class="model-description">Efficient version of GPT-4.1, balances quality with speed. Good for everyday tasks and quick responses.</p>
-                                <button type="button" class="model-select-btn" data-provider="openai" data-model="gpt-4.1-nano">Select</button>
-                            </div>
-
-                            <div class="model-card">
-                                <div class="model-header">
-                                    <div class="model-icon">
-                                        <svg class="icon" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                                    </div>
-                                    <div class="model-info">
-                                        <h3>GPT-4.1-Mini</h3>
-                                        <span class="model-badge standard">Standard</span>
-                                    </div>
-                                </div>
-                                <p class="model-description">Lighter version of GPT-4.1 with improved performance over Nano. Good for more complex everyday tasks.</p>
-                                <button type="button" class="model-select-btn" data-provider="openai" data-model="gpt-4.1-mini">Select</button>
-                            </div>
-
-                            <div class="model-card">
-                                <div class="model-header">
-                                    <div class="model-icon">
-                                        <svg class="icon" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                                    </div>
-                                    <div class="model-info">
-                                        <h3>GPT-3.5 Turbo</h3>
-                                        <span class="model-badge standard">Standard</span>
-                                    </div>
-                                </div>
-                                <p class="model-description">Fast and efficient model for most everyday tasks. Good balance of performance and speed.</p>
-                                <button type="button" class="model-select-btn" data-provider="openai" data-model="gpt-3.5-turbo">Select</button>
-                            </div>
-
-                            <div class="model-card">
-                                <div class="model-header">
-                                    <div class="model-icon claude">
-                                        <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                                    </div>
-                                    <div class="model-info">
-                                        <h3>Claude 3 Opus</h3>
-                                        <span class="model-badge premium">Premium</span>
-                                    </div>
-                                </div>
-                                <p class="model-description">Anthropic's most capable model with superior reasoning and instruction following abilities.</p>
-                                <button type="button" class="model-select-btn" data-provider="anthropic" data-model="claude-3-opus">Select</button>
-                            </div>
-
-                            <div class="model-card">
-                                <div class="model-header">
-                                    <div class="model-icon claude">
-                                        <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                                    </div>
-                                    <div class="model-info">
-                                        <h3>Claude 3 Sonnet</h3>
-                                        <span class="model-badge premium">Premium</span>
-                                    </div>
-                                </div>
-                                <p class="model-description">Balanced Claude model with strong performance and faster response times than Opus.</p>
-                                <button type="button" class="model-select-btn" data-provider="anthropic" data-model="claude-3-sonnet">Select</button>
-                            </div>
+                        <div id="model-list-container">
+                            <!-- Model cards will be dynamically inserted here -->
+                        </div>
+                        <div class="reasoning-effort-dropdown" style="display: none;">
+                            <label for="reasoning-effort">Reasoning Effort:</label>
+                            <select id="reasoning-effort" class="form-select">
+                                <option value="low">Low</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="high">High</option>
+                            </select>
                         </div>
                     </div>
 

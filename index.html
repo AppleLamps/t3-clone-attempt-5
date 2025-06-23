@@ -117,18 +117,28 @@
                                 Gemini 2.5 Pro
                                 <svg class="icon" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
                             </button>
-                            <button type="button" class="search-toggle-btn">
-                                <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                                Search
-                            </button>
+
+                            <div class="model-dropdown">
+                                <!-- Model options will be dynamically inserted here -->
+                            </div>
+                            
+                            <div class="reasoning-effort-container" style="display: none;">
+                                <button type="button" class="reasoning-effort-btn">
+                                    Medium
+                                    <svg class="icon" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+                                </button>
+                                <div class="reasoning-effort-dropdown">
+                                    <div class="reasoning-effort-option" data-value="low">Low</div>
+                                    <div class="reasoning-effort-option active" data-value="medium">Medium</div>
+                                    <div class="reasoning-effort-option" data-value="high">High</div>
+                                </div>
+                            </div>
                         </div>
                         <div class="actions-right">
                             <button type="button" class="icon-btn attach-btn" aria-label="Attach File">
                                 <svg class="icon" viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
                             </button>
-                            <button type="button" class="icon-btn scroll-btn" aria-label="Scroll to Top">
-                                <svg class="icon" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg>
-                            </button>
+
                             <button type="submit" class="send-btn" aria-label="Send" disabled>
                                 <svg class="icon" viewBox="0 0 24 24"><path d="m12 19V5M5 12l7-7 7 7"/></svg>
                             </button>
