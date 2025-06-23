@@ -8,53 +8,37 @@ class OpenAIProvider {
         this.name = 'openai';
         this.models = [
             {
-                id: 'gpt-4.5-preview',
-                name: 'GPT-4.5 Preview',
-                description: 'Latest preview version of GPT-4.5 with enhanced capabilities',
-                maxTokens: 128000,
-                category: 'premium'
-            },
-            {
-                id: 'gpt-4.1',
-                name: 'GPT-4.1',
-                description: 'Advanced AI assistant with extensive reasoning and knowledge',
-                maxTokens: 128000,
-                category: 'premium'
-            },
-            {
-                id: 'gpt-4.1-nano',
-                name: 'GPT-4.1 Nano',
-                description: 'Efficient version of GPT-4.1, balances quality with speed for everyday tasks',
-                maxTokens: 16000,
-                category: 'standard'
-            },
-            {
-                id: 'gpt-4.1-mini',
-                name: 'GPT-4.1 Mini',
-                description: 'Lighter version of GPT-4.1 with improved performance over Nano for complex tasks',
-                maxTokens: 32000,
-                category: 'standard'
-            },
-            {
                 id: 'gpt-4o',
                 name: 'GPT-4o',
-                description: 'Optimized version of GPT-4 with improved performance',
+                description: 'Advanced multimodal AI with vision capabilities and strong reasoning',
                 maxTokens: 128000,
                 category: 'premium'
             },
             {
-                id: 'o4-mini',
-                name: 'o4-Mini',
-                description: 'Reasoning model with advanced problem-solving capabilities',
-                maxTokens: 32000,
-                category: 'premium',
-                isReasoningModel: true,
-                disabled: true
+                id: 'gpt-4o-mini',
+                name: 'GPT-4o Mini',
+                description: 'Efficient version of GPT-4o with good performance and lower cost',
+                maxTokens: 128000,
+                category: 'standard'
+            },
+            {
+                id: 'gpt-4-turbo',
+                name: 'GPT-4 Turbo',
+                description: 'Latest GPT-4 model with improved performance and knowledge cutoff',
+                maxTokens: 128000,
+                category: 'premium'
+            },
+            {
+                id: 'gpt-3.5-turbo',
+                name: 'GPT-3.5 Turbo',
+                description: 'Fast and cost-effective model for most conversation tasks',
+                maxTokens: 16385,
+                category: 'standard'
             }
         ];
 
-        // Define reasoning models
-        this.reasoningModels = ['o4-mini'];
+        // Remove reasoning models as they require session authentication
+        this.reasoningModels = [];
     }
 
     /**
@@ -142,23 +126,18 @@ class OpenAIProvider {
                 throw new Error('OpenAI API key not found in settings.');
             }
 
-            const isReasoningModel = this.isReasoningModel(modelId);
             const formattingOptions = { ...options, modelId };
             const messages = this._formatMessages(message, conversation, formattingOptions);
             
             // Check for attachments
             const hasAttachments = options.attachments && options.attachments.length > 0;
 
-            const OPENAI_API_URL = isReasoningModel
-                ? 'https://api.openai.com/v1/responses/create'
-                : 'https://api.openai.com/v1/chat/completions';
+            // Always use chat completions API
+            const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 
             let requestBody;
 
-            if (isReasoningModel) {
-                const formattedInput = [{ role: "user", content: message }];
-                requestBody = { model: modelId, reasoning: { effort: "medium" }, input: formattedInput };
-            } else if (hasAttachments) {
+            if (hasAttachments) {
                 // Use vision model for handling attachments
                 const visionModel = 'gpt-4o';
                 
@@ -185,32 +164,10 @@ class OpenAIProvider {
                                     ? 'high' : 'auto'
                             }
                         });
-                    } else if (attachment.type === 'application/pdf') {
-                        // For PDFs, include as file content
-                        content.push({
-                            type: 'text',
-                            text: `[PDF: ${attachment.name}]`
-                        });
-                        
-                        // Add file data directly in content
-                        // if (attachment.data) {
-                        //     content.push({
-                        //         type: 'image_url',
-                        //         image_url: {
-                        //             url: attachment.data
-                        //         }
-                        //     });
-                        // }
-                    } else {
-                        // For other file types, include as text with file info
-                        content.push({
-                            type: 'text',
-                            text: `[File: ${attachment.name}, Type: ${attachment.type}, Size: ${this._formatFileSize(attachment.size)}]`
-                        });
                     }
                 }
-                
-                // Format the messages with content array for the last user message
+
+                // Build messages array for vision model
                 const messagesWithAttachments = [];
                 
                 // Add system message if present
@@ -259,9 +216,6 @@ class OpenAIProvider {
                 };
             }
 
-            // Log the request body (for debugging only - remove in production)
-            // console.log('Raw requestBody before sanitization:', JSON.stringify(requestBody, null, 2));
-
             // Sanitize messages before sending to API
             if (requestBody.messages) {
                 requestBody.messages = this._sanitizeAndNormalizeMessages(requestBody.messages);
@@ -290,59 +244,49 @@ class OpenAIProvider {
                 throw new Error(`OpenAI API error: ${errorMessage}`);
             }
 
-            if (isReasoningModel) {
-                const responseData = await response.json();
-                const outputText = responseData.output_text || '';
-                const formattedOutput = this._formatApiResponse(outputText);
+            // Handle streaming response
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+            let buffer = '';
+            let fullContent = '';
 
-                if (onStreamUpdate) {
-                    onStreamUpdate(formattedOutput);
-                }
-                return { message: formattedOutput, provider: this.name, model: modelId, usage: null };
-            } else {
-                const reader = response.body.getReader();
-                const decoder = new TextDecoder('utf-8');
-                let buffer = '';
-                let fullContent = '';
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) break;
 
-                while (true) {
-                    const { value, done } = await reader.read();
-                    if (done) break;
+                const chunk = decoder.decode(value, { stream: true });
+                buffer += chunk;
 
-                    const chunk = decoder.decode(value, { stream: true });
-                    buffer += chunk;
+                const lines = buffer.split('\n');
+                buffer = lines.pop(); 
 
-                    const lines = buffer.split('\n');
-                    buffer = lines.pop(); 
-
-                    for (const line of lines) {
-                        if (line.startsWith('data: ')) {
-                            const data = line.substring(6);
-                            if (data === '[DONE]') {
-                                reader.cancel();
-                                const finalFormattedContent = this._formatApiResponse(fullContent);
-                                return { message: finalFormattedContent, provider: this.name, model: modelId, usage: null };
-                            }
-                            try {
-                                const json = JSON.parse(data);
-                                const content = json.choices[0]?.delta?.content || '';
-                                if (content) {
-                                    fullContent += content;
-                                    if (onStreamUpdate) {
-                                        // Stream formatted content incrementally
-                                        onStreamUpdate(this._formatApiResponse(fullContent));
-                                    }
+                for (const line of lines) {
+                    if (line.startsWith('data: ')) {
+                        const data = line.substring(6);
+                        if (data === '[DONE]') {
+                            reader.cancel();
+                            const finalFormattedContent = this._formatApiResponse(fullContent);
+                            return { message: finalFormattedContent, provider: this.name, model: modelId, usage: null };
+                        }
+                        try {
+                            const json = JSON.parse(data);
+                            const content = json.choices[0]?.delta?.content || '';
+                            if (content) {
+                                fullContent += content;
+                                if (onStreamUpdate) {
+                                    // Stream formatted content incrementally
+                                    onStreamUpdate(this._formatApiResponse(fullContent));
                                 }
-                            } catch (e) {
-                                console.error('Error parsing stream chunk:', e, 'Chunk:', data);
                             }
+                        } catch (e) {
+                            console.error('Error parsing stream chunk:', e, 'Chunk:', data);
                         }
                     }
                 }
-                // This part should ideally not be reached if [DONE] is always sent for streams.
-                const finalFormattedContent = this._formatApiResponse(fullContent);
-                return { message: finalFormattedContent, provider: this.name, model: modelId, usage: null };
             }
+            // Fallback if [DONE] is not received
+            const finalFormattedContent = this._formatApiResponse(fullContent);
+            return { message: finalFormattedContent, provider: this.name, model: modelId, usage: null };
 
         } catch (error) {
             console.error('OpenAI API Error:', error);
