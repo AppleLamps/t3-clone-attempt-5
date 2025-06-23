@@ -1,17 +1,20 @@
 // T3 Chat Main JS
 import apiService from './services/apiService.js';
 import OpenAIProvider from './services/providers/openaiProvider.js';
+import GoogleProvider from './services/providers/googleProvider.js';
+import AnthropicProvider from './services/providers/anthropicProvider.js';
 import chatService from './services/chatService.js';
-import './views/chatView.js';
+// ChatView will be imported after providers are initialized
 
 /**
  * Initialize API providers
  */
 function initializeApiProviders() {
     try {
-        // Register OpenAI provider
-        const openaiProvider = new OpenAIProvider();
-        apiService.registerProvider('openai', openaiProvider);
+        // Register all providers
+        apiService.registerProvider('openai', new OpenAIProvider());
+        apiService.registerProvider('google', new GoogleProvider());
+        apiService.registerProvider('anthropic', new AnthropicProvider());
 
         // Try to load saved model first
         apiService.loadSavedModel();
@@ -24,9 +27,9 @@ function initializeApiProviders() {
 
             // Set default model based on preference
             if (preferLightModels) {
-                apiService.setActiveModel('openai', 'gpt-4.1-mini');
+                apiService.setActiveModel('openai', 'gpt-4o-mini');
             } else {
-                apiService.setActiveModel('openai', 'gpt-4.1');
+                apiService.setActiveModel('openai', 'gpt-4o');
             }
         }
         // If a model was loaded from storage, activeModel is already set, so no further action needed here.
@@ -39,9 +42,12 @@ function initializeApiProviders() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Initialize API providers
+document.addEventListener('DOMContentLoaded', async () => {
+    // Initialize API providers first
     initializeApiProviders();
+    
+    // Now import and initialize ChatView after providers are ready
+    await import('./views/chatView.js');
 
     // Cache DOM elements
     const elements = {
@@ -225,6 +231,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Model Selector is handled by ChatView
 
     // Helper function to append messages to the chat log
     function appendMessage(text, className) {
