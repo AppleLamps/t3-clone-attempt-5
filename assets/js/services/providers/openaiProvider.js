@@ -49,20 +49,12 @@ class OpenAIProvider {
                 maxTokens: 32000,
                 category: 'premium',
                 isReasoningModel: true,
-                disabled: false
-            },
-            {
-                id: 'o3',
-                name: 'o3',
-                description: 'Advanced reasoning model with high-effort problem-solving capabilities',
-                maxTokens: 200000,
-                category: 'premium',
-                isReasoningModel: true
+                disabled: true
             }
         ];
 
         // Define reasoning models
-        this.reasoningModels = ['o4-mini', 'o3'];
+        this.reasoningModels = ['o4-mini'];
     }
 
     /**
@@ -164,48 +156,8 @@ class OpenAIProvider {
             let requestBody;
 
             if (isReasoningModel) {
-                // Format input based on specific reasoning model
-                if (modelId === 'o3') {
-                    // For o3, use the exact API structure you provided
-                    const formattedInput = [];
-                    
-                    // Add previous conversation messages
-                    if (conversation && conversation.length > 0) {
-                        for (const msg of conversation) {
-                            const content = typeof msg.content === 'object' && msg.content.text 
-                                ? msg.content.text 
-                                : msg.content;
-                            formattedInput.push({ 
-                                role: msg.role === 'user' ? 'user' : 'assistant', 
-                                content 
-                            });
-                        }
-                    }
-                    
-                    // Add current user message
-                    const finalUserMessage = typeof message === 'object' && message.text ? message.text : message;
-                    formattedInput.push({ role: "user", content: finalUserMessage });
-                    
-                    requestBody = { 
-                        model: "o3", 
-                        input: formattedInput,
-                        text: {
-                            "format": {
-                                "type": "text"
-                            }
-                        },
-                        reasoning: { 
-                            "effort": "high", 
-                            "summary": "auto" 
-                        },
-                        tools: [],
-                        store: true
-                    };
-                } else {
-                    // For other reasoning models like o4-mini
-                    const formattedInput = [{ role: "user", content: message }];
-                    requestBody = { model: modelId, reasoning: { effort: "medium" }, input: formattedInput };
-                }
+                const formattedInput = [{ role: "user", content: message }];
+                requestBody = { model: modelId, reasoning: { effort: "medium" }, input: formattedInput };
             } else if (hasAttachments) {
                 // Use vision model for handling attachments
                 const visionModel = 'gpt-4o';
@@ -316,29 +268,13 @@ class OpenAIProvider {
             }
             
             console.log('Sending request to OpenAI:', JSON.stringify(requestBody, null, 2));
-            console.log('Using API URL:', OPENAI_API_URL);
-            console.log('Using headers:', headers);
-
-            // Use different headers for o3 model
-            let headers;
-            if (modelId === 'o3') {
-                headers = {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${apiKey}`,
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-                    'Origin': window.location.origin,
-                    'Referer': window.location.href
-                };
-            } else {
-                headers = { 
-                    'Content-Type': 'application/json', 
-                    'Authorization': `Bearer ${apiKey}`
-                };
-            }
 
             const response = await fetch(OPENAI_API_URL, {
                 method: 'POST',
-                headers: headers,
+                headers: { 
+                    'Content-Type': 'application/json', 
+                    'Authorization': `Bearer ${apiKey}`
+                },
                 body: JSON.stringify(requestBody),
             });
 
@@ -348,14 +284,6 @@ class OpenAIProvider {
                     const errorData = await response.json();
                     errorMessage = errorData.error?.message || 'API error: ' + response.status;
                     console.error('API error details:', errorData);
-                    console.error('Response status:', response.status);
-                    console.error('Response headers:', Object.fromEntries(response.headers.entries()));
-                    
-                    // Special handling for o3 authentication errors
-                    if (modelId === 'o3' && response.status === 401) {
-                        console.error('o3 authentication failed. API Key type might not be supported for this model.');
-                        errorMessage += '\n\nNote: The o3 model may require special API access or different authentication. Please check your OpenAI account tier and API access permissions.';
-                    }
                 } catch (e) {
                     errorMessage = `API error: ${response.status} ${response.statusText}`;
                 }
@@ -364,16 +292,7 @@ class OpenAIProvider {
 
             if (isReasoningModel) {
                 const responseData = await response.json();
-                let outputText;
-                
-                if (modelId === 'o3') {
-                    // For o3 model, extract text from the response structure
-                    outputText = responseData.text?.value || responseData.output_text || '';
-                } else {
-                    // For other reasoning models
-                    outputText = responseData.output_text || '';
-                }
-                
+                const outputText = responseData.output_text || '';
                 const formattedOutput = this._formatApiResponse(outputText);
 
                 if (onStreamUpdate) {
