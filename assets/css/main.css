@@ -926,3 +926,5 @@ html.light-alt {
 .top-right-actions-container .icon-btn:hover {
     color: var(--color-primary); /* Ensure consistent hover color */
 }
+
+/* Model dropdown styles moved to chat.css */
