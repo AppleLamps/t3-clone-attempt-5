@@ -23,8 +23,9 @@ class ApiService {
      * Set the active provider and model
      * @param {string} providerName - Name of the provider
      * @param {string} modelName - Name of the model
+     * @param {string} [reasoningEffort] - Optional reasoning effort for models like o4-mini
      */
-    setActiveModel(providerName, modelName) {
+    setActiveModel(providerName, modelName, reasoningEffort = null) {
         if (!this.providers[providerName]) {
             throw new Error(`Provider "${providerName}" is not registered`);
         }
@@ -39,18 +40,25 @@ class ApiService {
         // Save the active model to local storage
         localStorage.setItem('t3chat_active_provider', providerName);
         localStorage.setItem('t3chat_active_model', modelName);
+        if (reasoningEffort) {
+            localStorage.setItem('t3chat_reasoning_effort', reasoningEffort);
+        } else {
+            localStorage.removeItem('t3chat_reasoning_effort');
+        }
 
-        return { provider: providerName, model: modelName };
+        return { provider: providerName, model: modelName, reasoningEffort: reasoningEffort };
     }
 
     /**
      * Get the active provider and model
-     * @returns {object} - Active provider and model
+     * @returns {object} - Active provider, model, and optional reasoning effort
      */
     getActiveModel() {
+        const reasoningEffort = localStorage.getItem('t3chat_reasoning_effort');
         return {
             provider: this.activeProvider,
-            model: this.activeModel
+            model: this.activeModel,
+            reasoningEffort: reasoningEffort || undefined
         };
     }
 
@@ -81,11 +89,18 @@ class ApiService {
             throw new Error("No active model selected");
         }
 
+        const activeModelDetails = this.getActiveModel();
+        const combinedOptions = { ...options };
+
+        if (activeModelDetails.reasoningEffort) {
+            combinedOptions.reasoningEffort = activeModelDetails.reasoningEffort;
+        }
+
         return this.providers[this.activeProvider].generateCompletion(
             this.activeModel,
             message,
             conversation,
-            options,
+            combinedOptions,
             onStreamUpdate
         );
     }
