@@ -16,8 +16,23 @@ class ChatView {
         this.promptButtons = document.querySelectorAll('.prompt-btn');
         this.newChatBtn = document.querySelector('.new-chat-btn');
         this.modelSelectorBtn = document.querySelector('.model-selector-btn');
+        this.modelDropdown = document.querySelector('.model-dropdown');
         this.sidebar = document.querySelector('.sidebar-nav');
         this.attachBtn = document.querySelector('.attach-btn');
+        this.reasoningEffortContainer = document.querySelector('.reasoning-effort-container');
+        this.reasoningEffortBtn = document.querySelector('.reasoning-effort-btn');
+        this.reasoningEffortDropdown = document.querySelector('.reasoning-effort-dropdown');
+
+        // These elements are inside modelDropdown, so check if it exists
+        if (this.modelDropdown) {
+            this.chatModelSelectButtons = this.modelDropdown.querySelectorAll('.model-select-btn');
+            this.chatReasoningEffortDropdown = this.modelDropdown.querySelector('.reasoning-effort-dropdown');
+            this.chatReasoningEffortSelect = this.modelDropdown.querySelector('#reasoning-effort-chat');
+        } else {
+            this.chatModelSelectButtons = [];
+            this.chatReasoningEffortDropdown = null;
+            this.chatReasoningEffortSelect = null;
+        }
 
         // Attachment storage
         this.attachments = [];
@@ -30,16 +45,75 @@ class ChatView {
     }
 
     /**
+     * Update the model selector button text to reflect the active model
+     */
+    updateModelSelectorText() {
+        if (!this.modelSelectorBtn) return;
+
+        const activeModel = apiService.getActiveModel();
+        const availableModels = apiService.getAvailableModels();
+        let activeModelName = 'Select Model';
+
+        // Find the active model's name from the available models list
+        if (activeModel.provider && activeModel.model) {
+            const providerModels = availableModels[activeModel.provider];
+            if (providerModels) {
+                const modelData = providerModels.find(m => m.id === activeModel.model);
+                if (modelData) {
+                    activeModelName = modelData.name;
+                }
+            }
+        }
+
+        const icon = this.modelSelectorBtn.querySelector('svg.icon');
+        this.modelSelectorBtn.textContent = activeModelName + ' ';
+        if (icon) {
+            this.modelSelectorBtn.appendChild(icon);
+        }
+
+        // Show/hide reasoning effort dropdown based on the active model
+        this.updateReasoningEffortVisibility();
+    }
+
+    /**
+     * Update visibility of reasoning effort dropdown based on active model
+     */
+    updateReasoningEffortVisibility() {
+        // Hide reasoning effort controls since we don't have reasoning models
+        if (this.reasoningEffortContainer) {
+            this.reasoningEffortContainer.style.display = 'none';
+        }
+    }
+
+    /**
      * Initialize the chat view
      */
     init() {
+        this.renderModelDropdown(); // Dynamically render the model dropdown first
+
         // Set up event listeners
         this.chatForm?.addEventListener('submit', this.handleSubmit.bind(this));
         this.promptButtons?.forEach(button => {
             button.addEventListener('click', this.handlePromptClick.bind(this));
         });
         this.newChatBtn?.addEventListener('click', this.handleNewChat.bind(this));
-        this.modelSelectorBtn?.addEventListener('click', this.handleModelSelector.bind(this));
+        
+        if (this.modelSelectorBtn) {
+            this.modelSelectorBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent immediate closing from document click
+                this.modelDropdown?.classList.toggle('show');
+            });
+        }
+
+        // No reasoning effort controls since we don't have reasoning models
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            // Close model dropdown
+            if (this.modelDropdown && !this.modelDropdown.contains(e.target) && this.modelSelectorBtn && !this.modelSelectorBtn.contains(e.target)) {
+                this.modelDropdown.classList.remove('show');
+            }
+        });
 
         // Set up file attachment functionality
         if (this.attachBtn) {
@@ -52,24 +126,12 @@ class ChatView {
 
             // Add keydown event listener for Enter and Ctrl+Enter handling
             this.chatInput.addEventListener('keydown', this.handleInputKeydown.bind(this));
-
-            // Initial resize
-            this.handleInputResize();
         }
 
-        // Render existing conversations in sidebar
+        // Render initial state
         this.renderConversations();
-
-        // Load active conversation if any
-        const activeConversation = chatService.getActiveConversation();
-        if (activeConversation) {
-            this.renderConversation(activeConversation);
-        }
-
-        // Set up model selector text
+        this.handleChatSelect(this.getActiveChatId());
         this.updateModelSelectorText();
-
-        // Check message usage limits
         this.checkMessageUsage();
 
         // Set up chat deletion handling
@@ -88,6 +150,14 @@ class ChatView {
                 }
             }
         });
+    }
+
+    /**
+     * Helper to get the active chat ID
+     * @returns {string|null}
+     */
+    getActiveChatId() {
+        return chatService.activeConversationId;
     }
 
     /**
@@ -610,144 +680,8 @@ class ChatView {
         if (this.initialScreen) {
             this.initialScreen.style.display = 'block';
         }
-
-        // Check usage after creating new chat
-        this.checkMessageUsage();
-    }
-
-    /**
-     * Handle model selector button click
-     */
-    handleModelSelector() {
-        // Create model dropdown if it doesn't exist
-        let modelDropdown = document.getElementById('model-dropdown');
-
-        if (modelDropdown) {
-            // Toggle visibility if already exists
-            modelDropdown.remove();
-            this.modelSelectorBtn.classList.remove('open');
-            return;
-        }
-
-        // Add open class to button
-        this.modelSelectorBtn.classList.add('open');
-
-        // Create dropdown
-        modelDropdown = document.createElement('div');
-        modelDropdown.id = 'model-dropdown';
-        modelDropdown.className = 'model-dropdown';
-
-        // Get available models
-        const availableModels = apiService.getAvailableModels();
-        const activeModel = apiService.getActiveModel();
-
-        // Create dropdown items for each provider and model
-        for (const [providerName, models] of Object.entries(availableModels)) {
-            // Add provider header
-            const providerHeader = document.createElement('div');
-            providerHeader.className = 'model-provider-header';
-            providerHeader.textContent = this.formatProviderName(providerName);
-            modelDropdown.appendChild(providerHeader);
-
-            // Add models for this provider
-            models.forEach(model => {
-                const modelItem = document.createElement('div');
-                modelItem.className = 'model-item';
-                if (activeModel.provider === providerName && activeModel.model === model.id) {
-                    modelItem.classList.add('active');
-                }
-
-                modelItem.dataset.provider = providerName;
-                modelItem.dataset.model = model.id;
-
-                // Model name and description
-                modelItem.innerHTML = `
-                    <div class="model-name">${model.name}</div>
-                    <div class="model-description">${model.description}</div>
-                `;
-
-                // Handle model selection
-                modelItem.addEventListener('click', () => {
-                    apiService.setActiveModel(providerName, model.id);
-                    this.updateModelSelectorText();
-                    modelDropdown.remove();
-                    this.modelSelectorBtn.classList.remove('open');
-                });
-
-                modelDropdown.appendChild(modelItem);
-            });
-        }
-
-        // Append dropdown first to get proper size calculations
-        document.body.appendChild(modelDropdown);
-
-        // Position the dropdown to open upwards
-        const rect = this.modelSelectorBtn.getBoundingClientRect();
-        modelDropdown.style.bottom = `${window.innerHeight - rect.top}px`;
-        modelDropdown.style.left = `${rect.left}px`;
-
-        // Add styles for better visibility
-        modelDropdown.classList.add('model-dropdown-visible');
-
-        // Close dropdown when clicking outside
-        const handleOutsideClick = (e) => {
-            if (!modelDropdown.contains(e.target) && e.target !== this.modelSelectorBtn) {
-                modelDropdown.remove();
-                this.modelSelectorBtn.classList.remove('open');
-                document.removeEventListener('click', handleOutsideClick);
-            }
-        };
-
-        // Use setTimeout to avoid immediate trigger
-        setTimeout(() => {
-            document.addEventListener('click', handleOutsideClick);
-        }, 0);
-    }
-
-    /**
-     * Format provider name for display
-     * @param {string} providerName - Provider name
-     * @returns {string} - Formatted provider name
-     */
-    formatProviderName(providerName) {
-        switch(providerName) {
-            case 'openai': return 'OpenAI';
-            case 'anthropic': return 'Anthropic';
-            case 'google': return 'Google';
-            case 'xai': return 'xAI';
-            default: return providerName.charAt(0).toUpperCase() + providerName.slice(1);
-        }
-    }
-
-    /**
-     * Update model selector button text
-     */
-    updateModelSelectorText() {
-        if (!this.modelSelectorBtn) return;
-
-        const activeModel = apiService.getActiveModel();
-        if (!activeModel.provider || !activeModel.model) {
-            this.modelSelectorBtn.textContent = 'Select Model';
-            return;
-        }
-
-        // Get model name from provider
-        const availableModels = apiService.getAvailableModels();
-        const providerModels = availableModels[activeModel.provider] || [];
-        const model = providerModels.find(m => m.id === activeModel.model);
-
-        if (model) {
-            this.modelSelectorBtn.textContent = model.name;
-        } else {
-            this.modelSelectorBtn.textContent = activeModel.model;
-        }
-
-        // Keep the dropdown icon
-        const svgIcon = document.createElement('svg');
-        svgIcon.className = 'icon';
-        svgIcon.setAttribute('viewBox', '0 0 24 24');
-        svgIcon.innerHTML = '<path d="m6 9 6 6 6-6"/>';
-        this.modelSelectorBtn.appendChild(svgIcon);
+        this.chatInput.disabled = false;
+        this.chatInput.placeholder = 'Type a message...';
     }
 
     /**
@@ -1048,47 +982,170 @@ class ChatView {
     }
 
     /**
-     * Handle selecting a chat from the sidebar
-     * @param {string} chatId - ID of the selected chat
+     * Render the model dropdown menu dynamically
      */
-    async handleChatSelect(chatId) {
-        chatService.setActiveConversation(chatId);
-        const conversation = chatService.getConversation(chatId);
-        await this.renderConversation(conversation);
+    renderModelDropdown() {
+        if (!this.modelDropdown) return;
 
-        // Update active state in sidebar
-        const chatItems = this.sidebar.querySelectorAll('.chat-item');
-        chatItems.forEach(item => {
-            item.classList.toggle('active', item.dataset.chatId === chatId);
-        });
+        const availableModels = apiService.getAvailableModels();
+        this.modelDropdown.innerHTML = ''; // Clear existing content
+
+        // Get current active model for highlighting
+        const activeModel = apiService.getActiveModel();
+
+        for (const [providerName, models] of Object.entries(availableModels)) {
+            // Create provider section
+            const providerSection = document.createElement('div');
+            providerSection.className = 'model-provider-section';
+
+            // Create provider header
+            const providerHeader = document.createElement('div');
+            providerHeader.className = 'model-provider-header';
+            
+            const providerIcon = document.createElement('div');
+            providerIcon.className = `provider-icon ${providerName.toLowerCase()}`;
+            providerIcon.textContent = providerName.charAt(0).toUpperCase();
+            
+            providerHeader.appendChild(providerIcon);
+            providerHeader.appendChild(document.createTextNode(providerName.toUpperCase()));
+            
+            providerSection.appendChild(providerHeader);
+
+            models.forEach(model => {
+                const button = document.createElement('button');
+                button.className = 'model-select-btn';
+                button.dataset.provider = providerName;
+                button.dataset.model = model.id;
+
+                // Check if this is the active model
+                if (activeModel.provider === providerName && activeModel.model === model.id) {
+                    button.classList.add('active');
+                }
+
+                // Create model info container
+                const modelInfo = document.createElement('div');
+                modelInfo.className = 'model-info';
+
+                // Model name
+                const modelName = document.createElement('div');
+                modelName.className = 'model-name';
+                modelName.textContent = model.name;
+                modelInfo.appendChild(modelName);
+
+                // Model description (if available)
+                if (model.description) {
+                    const modelDesc = document.createElement('div');
+                    modelDesc.className = 'model-description';
+                    modelDesc.textContent = model.description;
+                    modelInfo.appendChild(modelDesc);
+                }
+
+                // Model meta information
+                const modelMeta = document.createElement('div');
+                modelMeta.className = 'model-meta';
+
+                // Add category badge
+                if (model.category) {
+                    const categoryBadge = document.createElement('span');
+                    categoryBadge.className = `model-badge ${model.category}`;
+                    categoryBadge.textContent = model.category;
+                    modelMeta.appendChild(categoryBadge);
+                }
+
+                // Add reasoning badge for reasoning models
+                if (model.isReasoningModel) {
+                    const reasoningBadge = document.createElement('span');
+                    reasoningBadge.className = 'model-badge reasoning';
+                    reasoningBadge.textContent = 'reasoning';
+                    modelMeta.appendChild(reasoningBadge);
+                }
+
+                // Add token count
+                if (model.maxTokens) {
+                    const tokenInfo = document.createElement('span');
+                    tokenInfo.className = 'model-tokens';
+                    tokenInfo.textContent = this.formatTokenCount(model.maxTokens);
+                    modelMeta.appendChild(tokenInfo);
+                }
+
+                modelInfo.appendChild(modelMeta);
+                button.appendChild(modelInfo);
+
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+
+                    try {
+                        apiService.setActiveModel(providerName, model.id);
+                        this.updateModelSelectorText();
+                        this.updateReasoningEffortVisibility();
+                        this.modelDropdown.classList.remove('show');
+                    } catch (error) {
+                        console.error("Error setting active model:", error);
+                        alert(`Failed to select model: ${error.message}`);
+                    }
+                });
+
+                providerSection.appendChild(button);
+            });
+
+            this.modelDropdown.appendChild(providerSection);
+        }
+
+        // No reasoning effort dropdown needed since we don't have reasoning models
     }
 
     /**
-     * Handle deleting a chat
-     * @param {string} chatId - ID of the chat to delete
+     * Format token count for display
+     * @param {number} tokens - Token count
+     * @returns {string} - Formatted token count
      */
-    async handleDeleteChat(chatId) {
-        try {
-            const success = await chatService.deleteConversation(chatId);
-
-            if (success) {
-                this.renderConversations();
-
-                // If current chat was deleted, clear the chat log or load the new active chat
-                const activeConversation = chatService.getActiveConversation();
-                if (activeConversation) {
-                    await this.renderConversation(activeConversation);
-                } else {
-                    this.clearChatLog();
-                    if (this.initialScreen) {
-                        this.initialScreen.style.display = 'block';
-                    }
-                }
-            }
-        } catch (error) {
-            console.error('Error deleting conversation:', error);
-            alert('Failed to delete conversation. Please try again.');
+    formatTokenCount(tokens) {
+        if (tokens >= 1000000) {
+            return `${(tokens / 1000000).toFixed(1)}M tokens`;
+        } else if (tokens >= 1000) {
+            return `${(tokens / 1000).toFixed(0)}K tokens`;
+        } else {
+            return `${tokens} tokens`;
         }
+    }
+
+    /**
+     * Create the reasoning effort dropdown element
+     * @returns {HTMLElement}
+     */
+    createReasoningEffortDropdown() {
+        const dropdownContainer = document.createElement('div');
+        dropdownContainer.className = 'reasoning-effort-dropdown';
+        dropdownContainer.style.display = 'none'; // Initially hidden
+
+        const label = document.createElement('label');
+        label.htmlFor = 'reasoning-effort-chat';
+        label.textContent = 'Reasoning Effort:';
+
+        const select = document.createElement('select');
+        select.id = 'reasoning-effort-chat';
+        select.innerHTML = `
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+        `;
+
+        select.addEventListener('change', (e) => {
+            e.stopPropagation();
+            const activeModel = apiService.getActiveModel();
+            if (activeModel.model === 'o4-mini') {
+                apiService.setActiveModel(activeModel.provider, activeModel.model, select.value);
+            }
+        });
+
+        dropdownContainer.appendChild(label);
+        dropdownContainer.appendChild(select);
+
+        // Update local references
+        this.chatReasoningEffortDropdown = dropdownContainer;
+        this.chatReasoningEffortSelect = select;
+
+        return dropdownContainer;
     }
 
     /**
@@ -1242,7 +1299,7 @@ class ChatView {
                         <span class="code-lang">HTML</span>
                         <div class="code-controls">
                             <button class="code-control-btn copy-btn" title="Copy code">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                             </button>
                             <button class="code-control-btn collapse-btn" title="Collapse code">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
@@ -1420,6 +1477,52 @@ class ChatView {
         // Add to chat log
         this.chatLog.appendChild(warningElement);
         this.scrollToBottom();
+    }
+
+    /**
+     * Handle chat selection
+     * @param {string} chatId - The ID of the chat to select
+     */
+    handleChatSelect(chatId) {
+        if (!chatId) {
+            // If no chat ID provided, show initial screen
+            if (this.initialScreen) {
+                this.initialScreen.style.display = 'block';
+            }
+            this.clearChatLog();
+            return;
+        }
+
+        // Set the active conversation
+        chatService.setActiveConversation(chatId);
+        
+        // Get the conversation and render it
+        const conversation = chatService.getConversation(chatId);
+        if (conversation) {
+            this.renderConversation(conversation);
+        }
+    }
+
+    /**
+     * Handle chat deletion
+     * @param {string} chatId - The ID of the chat to delete
+     */
+    handleDeleteChat(chatId) {
+        if (!chatId) return;
+
+        // Delete the conversation directly without confirmation
+        chatService.deleteConversation(chatId);
+        
+        // Re-render the conversations list
+        this.renderConversations();
+        
+        // If the deleted chat was active, clear the chat log and show initial screen
+        if (chatService.activeConversationId === chatId || !chatService.activeConversationId) {
+            this.clearChatLog();
+            if (this.initialScreen) {
+                this.initialScreen.style.display = 'block';
+            }
+        }
     }
 
     /**

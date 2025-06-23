@@ -16,26 +16,19 @@ class ModelsView {
      */
     initElements() {
         this.modelsPanel = document.getElementById('models-panel');
-        this.modelButtons = document.querySelectorAll('.model-select-btn');
+        this.modelListContainer = document.getElementById('model-list-container'); // New container for dynamic models
         this.temperatureSlider = document.getElementById('temperature-slider');
         this.temperatureValue = document.querySelector('.slider-value');
         this.maxTokensInput = document.getElementById('max-tokens-input');
         this.saveButton = document.getElementById('save-model-settings');
+        this.reasoningEffortDropdown = document.querySelector('.reasoning-effort-dropdown');
+        this.reasoningEffortSelect = document.getElementById('reasoning-effort');
     }
 
     /**
      * Bind event listeners
      */
     bindEvents() {
-        // Model selection buttons
-        this.modelButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const provider = button.dataset.provider;
-                const model = button.dataset.model;
-                this.selectModel(provider, model, button);
-            });
-        });
-
         // Temperature slider
         if (this.temperatureSlider && this.temperatureValue) {
             this.temperatureSlider.addEventListener('input', () => {
@@ -48,24 +41,30 @@ class ModelsView {
         if (this.saveButton) {
             this.saveButton.addEventListener('click', () => this.saveSettings());
         }
+
+        // Reasoning effort select
+        if (this.reasoningEffortSelect) {
+            this.reasoningEffortSelect.addEventListener('change', () => {
+                // When reasoning effort changes, re-select the model to apply the new setting
+                const activeModel = apiService.getActiveModel();
+                if (activeModel.model === 'o4-mini') {
+                    this.selectModel(activeModel.provider, activeModel.model, 
+                        document.querySelector(`button[data-model='o4-mini'][data-provider='openai']`));
+                }
+            });
+        }
     }
 
     /**
      * Load saved model settings
      */
     loadSavedSettings() {
-        // Get active model from API service
-        const activeModel = apiService.getActiveModel();
-        
-        // Update UI to reflect active model
-        if (activeModel.provider && activeModel.model) {
-            this.modelButtons.forEach(button => {
-                const isActive = button.dataset.provider === activeModel.provider && 
-                                button.dataset.model === activeModel.model;
-                
-                button.classList.toggle('active', isActive);
-                button.textContent = isActive ? 'Selected' : 'Select';
-            });
+        this.renderModels(); // Render models dynamically
+
+        // Load reasoning effort setting
+        const reasoningEffort = localStorage.getItem('t3chat_reasoning_effort') || 'medium';
+        if (this.reasoningEffortSelect) {
+            this.reasoningEffortSelect.value = reasoningEffort;
         }
 
         // Load temperature setting
@@ -89,18 +88,23 @@ class ModelsView {
      * @param {HTMLElement} selectedButton - The button that was clicked
      */
     selectModel(provider, model, selectedButton) {
-        // Update API service with selected model
-        apiService.setActiveModel(provider, model);
+        try {
+            // Update API service with selected model
+            apiService.setActiveModel(provider, model);
 
-        // Update UI
-        this.modelButtons.forEach(button => {
-            const isSelected = button === selectedButton;
-            button.classList.toggle('active', isSelected);
-            button.textContent = isSelected ? 'Selected' : 'Select';
-        });
+            // Update UI
+            document.querySelectorAll('.model-select-btn').forEach(button => {
+                const isSelected = button === selectedButton;
+                button.classList.toggle('active', isSelected);
+                button.textContent = isSelected ? 'Selected' : 'Select';
+            });
 
-        // Show confirmation message
-        this.showNotification(`${model} has been selected as your default model.`);
+            // Show confirmation message
+            this.showNotification(`${model} has been selected as your default model.`);
+        } catch (error) {
+            console.error("Error selecting model:", error);
+            this.showNotification(`Error: ${error.message}`);
+        }
     }
 
     /**
@@ -129,6 +133,67 @@ class ModelsView {
      */
     showNotification(message) {
         alert(message); // Simple notification for now
+    }
+
+    /**
+     * Render the list of available models
+     */
+    renderModels() {
+        const availableModels = apiService.getAvailableModels();
+        const activeModel = apiService.getActiveModel();
+        this.modelListContainer.innerHTML = ''; // Clear existing models
+
+        for (const [providerName, models] of Object.entries(availableModels)) {
+            const providerSection = document.createElement('div');
+            providerSection.className = 'provider-section';
+            
+            const providerTitle = document.createElement('h3');
+            providerTitle.textContent = providerName.charAt(0).toUpperCase() + providerName.slice(1);
+            providerSection.appendChild(providerTitle);
+
+            models.forEach(model => {
+                const modelCard = document.createElement('div');
+                modelCard.className = 'model-card';
+
+                const modelInfo = document.createElement('div');
+                modelInfo.className = 'model-info';
+                
+                const modelName = document.createElement('h4');
+                modelName.textContent = model.name;
+                modelInfo.appendChild(modelName);
+
+                const modelDescription = document.createElement('p');
+                modelDescription.textContent = model.description;
+                modelInfo.appendChild(modelDescription);
+
+                modelCard.appendChild(modelInfo);
+
+                const selectButton = document.createElement('button');
+                selectButton.className = 'model-select-btn';
+                selectButton.dataset.provider = providerName;
+                selectButton.dataset.model = model.id;
+
+                const isActive = activeModel.provider === providerName && activeModel.model === model.id;
+                selectButton.classList.toggle('active', isActive);
+                selectButton.textContent = isActive ? 'Selected' : 'Select';
+
+                selectButton.addEventListener('click', () => {
+                    this.selectModel(providerName, model.id, selectButton);
+                });
+
+                modelCard.appendChild(selectButton);
+                providerSection.appendChild(modelCard);
+            });
+
+            this.modelListContainer.appendChild(providerSection);
+        }
+
+        // Show/hide reasoning effort dropdown based on the active model
+        if (activeModel.model === 'o4-mini' && this.reasoningEffortDropdown) {
+            this.reasoningEffortDropdown.style.display = 'block';
+        } else if (this.reasoningEffortDropdown) {
+            this.reasoningEffortDropdown.style.display = 'none';
+        }
     }
 }
 
