@@ -162,7 +162,13 @@ class OpenAIProvider {
                 
                 // Process each attachment
                 for (const attachment of options.attachments) {
-                    if (attachment.type.startsWith('image/')) {
+                    if (attachment.textContent) {
+                        // Add text file, markdown, code, or PDF text
+                        content.push({
+                            type: 'text',
+                            text: `File: ${attachment.name}\n${attachment.textContent}`
+                        });
+                    } else if (attachment.type && attachment.type.startsWith('image/')) {
                         // Handle images
                         content.push({
                             type: 'image_url',
