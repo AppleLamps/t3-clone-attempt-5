@@ -798,7 +798,7 @@ html.light-alt {
 
 /* Utility classes */
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 /* Responsive adjustments */
