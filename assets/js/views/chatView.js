@@ -36,6 +36,8 @@ class ChatView {
 
         // Attachment storage
         this.attachments = [];
+        // Track if files are being processed
+        this.isProcessingFiles = false;
 
         // Usage warning displayed
         this.usageWarningDisplayed = false;
@@ -168,7 +170,7 @@ class ChatView {
         const fileInput = document.createElement('input');
         fileInput.type = 'file';
         fileInput.multiple = true;
-        fileInput.accept = 'image/*,.pdf,application/pdf,.doc,.docx,.txt,.csv,.xlsx,.xls';
+        fileInput.accept = 'image/*,.pdf,application/pdf,.doc,.docx,.txt,.csv,.xlsx,.xls,.md,.py';
         fileInput.style.display = 'none';
         fileInput.id = 'hidden-file-input';
         document.body.appendChild(fileInput);
@@ -183,6 +185,77 @@ class ChatView {
 
         // Handle file selection
         this.fileInput.addEventListener('change', this.handleFileSelect.bind(this));
+
+        // Set up drag and drop functionality
+        this.setupDragAndDrop();
+    }
+
+    /**
+     * Set up drag and drop functionality
+     */
+    setupDragAndDrop() {
+        const chatArea = document.getElementById('chat-area') || document.body;
+        let dragCounter = 0;
+
+        // Create drag overlay
+        const dragOverlay = document.createElement('div');
+        dragOverlay.className = 'drag-overlay';
+        dragOverlay.innerHTML = `
+            <div class="drag-content">
+                <svg class="drag-icon" viewBox="0 0 24 24">
+                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+                </svg>
+                <div class="drag-text">Drop files here to attach</div>
+                <div class="drag-subtext">Supports .txt, .md, .py, .pdf, images and more</div>
+            </div>
+        `;
+        dragOverlay.style.display = 'none';
+        document.body.appendChild(dragOverlay);
+
+        // Prevent default drag behaviors on the entire document
+        document.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+        });
+
+        document.addEventListener('dragenter', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dragCounter++;
+            
+            // Only show overlay if dragging files
+            if (e.dataTransfer.types.includes('Files')) {
+                dragOverlay.style.display = 'flex';
+            }
+        });
+
+        document.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dragCounter--;
+            
+            if (dragCounter === 0) {
+                dragOverlay.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dragCounter = 0;
+            dragOverlay.style.display = 'none';
+
+            const files = e.dataTransfer.files;
+            if (files && files.length > 0) {
+                // Create a fake event object to reuse handleFileSelect
+                const fakeEvent = {
+                    target: {
+                        files: files
+                    }
+                };
+                this.handleFileSelect(fakeEvent);
+            }
+        });
     }
 
     /**
@@ -192,32 +265,22 @@ class ChatView {
     async handleFileSelect(e) {
         const files = e.target.files;
         if (!files || files.length === 0) return;
-
-        // Show upload indicator
         const sendButton = this.chatForm?.querySelector('.send-btn');
-        if (sendButton) sendButton.disabled = false;
-
-        // Create attachment preview container if it doesn't exist
+        this.isProcessingFiles = true;
+        if (sendButton) sendButton.disabled = true;
         let attachmentPreview = document.querySelector('.attachment-preview');
         if (!attachmentPreview) {
             attachmentPreview = document.createElement('div');
             attachmentPreview.className = 'attachment-preview';
             this.chatForm.insertBefore(attachmentPreview, this.chatInput.nextSibling);
         }
-
-        // Process each file
         for (const file of files) {
             try {
-                // Check file size (max 10MB)
                 if (file.size > 10 * 1024 * 1024) {
                     throw new Error(`File ${file.name} is too large (max 10MB)`);
                 }
-
-                // Create file preview item
                 const previewItem = document.createElement('div');
                 previewItem.className = 'attachment-item';
-
-                // Add loading indicator
                 previewItem.innerHTML = `
                     <div class="attachment-loading">
                         <svg class="spinner" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke-width="3"></circle></svg>
@@ -226,44 +289,55 @@ class ChatView {
                     <button class="remove-attachment" data-filename="${file.name}">×</button>
                 `;
                 attachmentPreview.appendChild(previewItem);
-
-                // Process the file
-                const fileData = await this.processFile(file);
-
-                // Store attachment data
+                let fileData = await this.processFile(file);
+                let textContent = undefined;
+                if (file.type === 'text/plain' || file.name.endsWith('.txt') || file.name.endsWith('.md') || file.name.endsWith('.py')) {
+                    textContent = await file.text();
+                } else if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) {
+                    // Dynamically load PDF.js from CDN
+                    if (!window.pdfjsLib) {
+                        await new Promise((resolve, reject) => {
+                            const script = document.createElement('script');
+                            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.min.js';
+                            script.onload = resolve;
+                            script.onerror = reject;
+                            document.head.appendChild(script);
+                        });
+                    }
+                    const pdfjsLib = window.pdfjsLib;
+                    const arrayBuffer = await file.arrayBuffer();
+                    const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
+                    let text = '';
+                    for (let i = 1; i <= pdf.numPages; i++) {
+                        const page = await pdf.getPage(i);
+                        const content = await page.getTextContent();
+                        text += content.items.map(item => item.str).join(' ') + '\n';
+                    }
+                    textContent = text;
+                }
                 this.attachments.push({
                     name: file.name,
                     type: file.type,
                     data: fileData,
-                    size: file.size
+                    size: file.size,
+                    textContent
                 });
-
-                // Update preview with success state
                 previewItem.querySelector('.attachment-loading').innerHTML = `
                     <div class="attachment-icon">${this.getFileIcon(file.type)}</div>
                     <div class="attachment-name">${file.name}</div>
                 `;
-
-                // Add event listener to remove button
                 previewItem.querySelector('.remove-attachment').addEventListener('click', (e) => {
-                    // Remove attachment from array
                     const filename = e.target.dataset.filename;
                     this.attachments = this.attachments.filter(a => a.name !== filename);
-
-                    // Remove preview item
                     previewItem.remove();
-
-                    // If no attachments left, remove the preview container
                     if (this.attachments.length === 0) {
                         attachmentPreview.remove();
-
-                        // Disable send button if no text either
+                        // Only disable send button if there's no text either
                         if (sendButton && this.chatInput.value.trim() === '') {
                             sendButton.disabled = true;
                         }
                     }
                 });
-
             } catch (error) {
                 console.error('Error processing file:', error);
                 // Show error in preview
@@ -289,9 +363,12 @@ class ChatView {
                 });
             }
         }
-
-        // Reset file input
         this.fileInput.value = '';
+        this.isProcessingFiles = false;
+        // Only enable send button if there is text in the input field
+        if (sendButton && this.chatInput.value.trim() !== '') {
+            sendButton.disabled = false;
+        }
     }
 
     /**
@@ -367,6 +444,12 @@ class ChatView {
      */
     async handleSubmit(e) {
         e.preventDefault();
+        // Prevent submission if files are still being processed
+        if (this.isProcessingFiles) {
+            // Optionally show a message or indicator
+            alert('Please wait for file attachments to finish processing.');
+            return;
+        }
         // Check if this is a retry with a specific message
         const messageText = e.retryMessage || this.chatInput.value.trim();
 
