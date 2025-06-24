@@ -64,8 +64,9 @@
                 </div>
                 <div class="top-right-controls">
                     <div class="top-right-actions-container">
-                        <button type="button" class="icon-btn" aria-label="Search">
-                            <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                        
+                        <button type="button" id="print-btn" class="icon-btn" aria-label="Print Conversation">
+                            <svg class="icon" viewBox="0 0 24 24"><rect x="6" y="9" width="12" height="7" rx="2"/><path d="M6 17v2a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-2"/><polyline points="6 9 6 4 18 4 18 9"/></svg>
                         </button>
                         <button type="button" id="theme-toggle-btn" class="icon-btn" aria-label="Toggle Theme">
                             <svg class="icon icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41m10.32 10.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
@@ -122,7 +123,7 @@
                                 <!-- Model options will be dynamically inserted here -->
                             </div>
                             
-                            <div class="reasoning-effort-container" style="display: none;">
+                            <div class="reasoning-effort-container hidden">
                                 <button type="button" class="reasoning-effort-btn">
                                     Medium
                                     <svg class="icon" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
@@ -149,6 +150,7 @@
         </div>
     </div>
     <script type="module" src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/print-conversation.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
